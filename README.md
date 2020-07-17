@@ -4,6 +4,8 @@ code for [RayTracingInOneWeekend](https://github.com/RayTracing/raytracing.githu
 
 ~~第一次用vscode格式化C++代码，真香~~
 
+[TOC]
+
 #### 顺带学习一下C11/14/17的一些feature
 
 `override`：标识 for virtual function
