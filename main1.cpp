@@ -18,7 +18,7 @@ int main()
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < image_width; ++i)
         {
-            color pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
+            Color pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
             write_color(std::cout, pixel_color);
         }
     }

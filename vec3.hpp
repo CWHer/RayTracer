@@ -119,7 +119,7 @@ inline Vec3 unit_vector(Vec3 v)
 // Type aliases for Vec3
 // using point3 = Vec3;
 // using color = Vec3;
-typedef Vec3 point3; // 3D point
-typedef Vec3 color; // RGB color
+typedef Vec3 Point3; // 3D point
+typedef Vec3 Color; // RGB color
 
 #endif

@@ -8,7 +8,7 @@
 
 const double eps = 1e-8;
 
-bool hit_sphere(const point3 &center, double radius, const Ray &r)
+bool hit_sphere(const Point3 &center, double radius, const Ray &r)
 { //not a 2D circle, so discriminat is needed
     Vec3 oc = r.origin() - center;
     auto a = dot(r.direction(), r.direction());
@@ -18,13 +18,13 @@ bool hit_sphere(const point3 &center, double radius, const Ray &r)
     return (discriminant > eps);
 }
 
-color ray_color(const Ray &r)
+Color ray_color(const Ray &r)
 {
-    if (hit_sphere(point3(0, 0, -1), 0.5, r))
-        return color(1, 0, 0);
+    if (hit_sphere(Point3(0, 0, -1), 0.5, r))
+        return Color(1, 0, 0);
     Vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);                          //t can not reach 1, maxinum of y is ~0.44
-    return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0); //blend
+    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); //blend
 }
 
 int main()
@@ -41,7 +41,7 @@ int main()
     auto viewport_width = aspect_ratio * viewport_height;
     auto focal_length = 1.0;
 
-    auto origin = point3(0, 0, 0);
+    auto origin = Point3(0, 0, 0);
     auto horizontal = Vec3(viewport_width, 0, 0);
     auto vertical = Vec3(0, viewport_height, 0);
     auto lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
@@ -54,7 +54,7 @@ int main()
             auto u = double(i) / (image_width - 1);
             auto v = double(j) / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); //the length of r.dir varies, so there is horizontal gradient too.
-            color pixel_color = ray_color(r);
+            Color pixel_color = ray_color(r);
             write_color(std::cout, pixel_color);
         }
     }
