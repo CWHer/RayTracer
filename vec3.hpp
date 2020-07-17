@@ -23,40 +23,6 @@ public:
     Vec3() : e{0, 0, 0} {}
     Vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
 
-    inline static Vec3 random()
-    {
-        return Vec3(random_double(), random_double(), random_double());
-    }
-    inline static Vec3 random(double min, double max)
-    {
-        return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
-    }
-    inline static Vec3 random_in_unit_sphere()
-    {
-        //old version
-        Vec3 p;
-        do
-        {
-            p = random(-1, 1);
-        } while (p.length() >= 1);
-        return p;
-    }
-    inline static Vec3 random_in_hemisphere(const Vec3 &normal)
-    { //a uniform scatter direction for all angles
-        Vec3 in_unit_sphere = random_in_unit_sphere();
-        if (dot(in_unit_sphere, normal) > 0) // In the same hemisphere as the normal
-            return in_unit_sphere;
-        else
-            return -in_unit_sphere;
-    }
-    inline static Vec3 random_unit_vector()
-    { //on the surface of a unit sphere
-        auto a = random_double(0, 2 * pi);
-        auto z = random_double(-1, 1);
-        auto r = sqrt(1 - z * z);
-        return Vec3(r * cos(a), r * sin(a), z);
-    }
-
     double x() const { return e[0]; }
     double y() const { return e[1]; }
     double z() const { return e[2]; }
@@ -147,6 +113,50 @@ inline Vec3 cross(const Vec3 &u, const Vec3 &v)
 inline Vec3 unit_vector(Vec3 v)
 {
     return v / v.length();
+}
+
+// rand functions
+inline Vec3 random()
+{
+    return Vec3(random_double(), random_double(), random_double());
+}
+
+inline Vec3 random(double min, double max)
+{
+    return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+}
+
+inline Vec3 random_in_unit_sphere()
+{
+    //old version
+    Vec3 p;
+    do
+    {
+        p = random(-1, 1);
+    } while (p.length() >= 1);
+    return p;
+}
+
+inline Vec3 random_in_hemisphere(const Vec3 &normal)
+{ //a uniform scatter direction for all angles
+    Vec3 in_unit_sphere = random_in_unit_sphere();
+    if (dot(in_unit_sphere, normal) > 0) // In the same hemisphere as the normal
+        return in_unit_sphere;
+    else
+        return -in_unit_sphere;
+}
+
+inline Vec3 random_unit_vector()
+{ //on the surface of a unit sphere
+    auto a = random_double(0, 2 * pi);
+    auto z = random_double(-1, 1);
+    auto r = sqrt(1 - z * z);
+    return Vec3(r * cos(a), r * sin(a), z);
+}
+
+Vec3 reflect(const Vec3 &v, const Vec3 &n)
+{
+    return v - 2 * dot(v, n) * n;
 }
 
 // Type aliases for Vec3

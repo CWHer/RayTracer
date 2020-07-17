@@ -9,10 +9,12 @@ class Sphere : public Hittable
 private:
     Point3 center;
     double radius;
+    shared_ptr<Material> mat_ptr;
 
 public:
     Sphere() {}
-    Sphere(Point3 _c, double _r) : center(_c), radius(_r) {}
+    Sphere(Point3 _c, double _r, shared_ptr<Material> _mat_ptr)
+        : center(_c), radius(_r), mat_ptr(_mat_ptr) {}
 
     bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
@@ -32,6 +34,7 @@ public:
                 rec.p = r.at(rec.t);
                 Vec3 outward_norm = (rec.p - center) / radius;
                 rec.set_face_normal(r, outward_norm);
+                rec.mat_ptr = mat_ptr;
                 return 1;
             }
             temp = (-half_b + root) / a; //positive root
@@ -42,6 +45,7 @@ public:
                 rec.norm = (rec.p - center) / radius;
                 Vec3 outward_norm = (rec.p - center) / radius;
                 rec.set_face_normal(r, outward_norm);
+                rec.mat_ptr = mat_ptr;
                 return 1;
             }
         }

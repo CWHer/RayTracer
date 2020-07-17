@@ -3,20 +3,22 @@
 #include "hittablelist.hpp"
 #include "sphere.hpp"
 #include "camera.hpp"
+#include "material.hpp"
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
     hit_record rec;
     // If we've exceeded the ray bounce limit, no more light is gathered.
-    // I think it's dark enough with 2^(-50)
     if (depth < 0)
         return Color(0, 0, 0);
     //use eps instead of 0. This gets rid of the shadow acne problem.
     if (world.hit(r, eps, infinity, rec))
     {
-        Point3 target = rec.p + rec.norm + random_unit_vector();
-        // Point3 target = rec.p + Vec3::random_in_hemisphere(rec.norm);
-        return 0.5 * ray_color(Ray(rec.p, target - rec.p), world, depth - 1); //multiple bounces
+        Ray scattered;
+        Color attenutaion;
+        if (rec.mat_ptr->scatter(r, rec, attenutaion, scattered))
+            return attenutaion * ray_color(scattered, world, depth - 1);
+        return Color(0, 0, 0);
     }
     Vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
@@ -35,8 +37,17 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world;
-    world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
+    // world.add(make_shared<Sphere>(
+    //     Point3(0, 0, -1), 0.5, make_shared<Lambertian>(Color(0.7, 0.3, 0.3))));
+    world.add(make_shared<Sphere>(
+        Point3(0, 0, -1), 0.5, make_shared<Lambertian>(Color(0.945, 0.498, 0.07) * 1.4)));
+
+    world.add(make_shared<Sphere>(
+        Point3(0, -100.5, -1), 100, make_shared<Lambertian>(Color(0.8, 0.8, 0.0))));
+
+    world.add(make_shared<Sphere>(Point3(1, 0, -1), 0.5, make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.3)));
+    // world.add(make_shared<Sphere>(Point3(-1, 0, -1), 0.5, make_shared<Metal>(Color(0.8, 0.8, 0.8))));
+    world.add(make_shared<Sphere>(Point3(-1, -0.25, -1), 0.25, make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.7)));
 
     Camera cam;
 

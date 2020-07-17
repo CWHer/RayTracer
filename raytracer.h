@@ -60,5 +60,7 @@ inline double clamp(double x, double min, double max)
 #include "ray.hpp"
 #include "vec3.hpp"
 #include "color.hpp"
+#include "camera.hpp"
+#include "hittable.h"
 
 #endif

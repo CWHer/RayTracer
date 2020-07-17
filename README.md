@@ -13,7 +13,7 @@ code for [RayTracingInOneWeekend](https://github.com/RayTracing/raytracing.githu
 `Initiallizer list`
 
 ```c++
-std::vector<int> v{1, 2, 3};
+std::vector<int> v{1, 2, 3};	//quite easy
 ```
 
 `nullptr`
@@ -109,17 +109,17 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 
 #### 主要模块
 
-| name     |          | members                                     |
-| -------- | -------- | ------------------------------------------- |
-| Vec3     | 三维向量 | (x,y,z)                                     |
-| Ray      | 直线     | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
-| Hittable | 抽象基类 |                                             |
-| Sphere   | 球       | c&r,hit(Ray,self)                           |
-| Camera   |          | orig/LDcorner/vertical/horiontal            |
-|          |          |                                             |
-|          |          |                                             |
-|          |          |                                             |
-|          |          |                                             |
+| name         |                  | members                                     |
+| ------------ | ---------------- | ------------------------------------------- |
+| Vec3         | 三维向量         | (x,y,z)                                     |
+| Ray          | 直线             | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
+| Hittable     | 可碰撞抽象基类   | hit                                         |
+| Sphere       | 球               | c&r,hit(Ray,self)                           |
+| HittableList |                  |                                             |
+| Camera       |                  | orig/LDcorner/vertical/horiontal            |
+| Material     | 材质抽象基类     | produce scattered ray                       |
+| Lambertian   | diffuse          |                                             |
+| Metal        | mirrored reflect |                                             |
 
 
 
@@ -206,3 +206,19 @@ $$
 > - An Alternative Diffuse Formulation
 >
 > A more intuitive approach is to have a uniform scatter direction for all angles away from the hit point, with no dependence on the angle from the normal.
+
+#### 8.Metal
+
+Mirrored Light Reflection
+$$
+\mathbf{v}-2(\mathbf{v}\cdot \mathbf{n})\mathbf{n}
+$$
+
+
+![](img/p6.png)
+
+Fuzzy Reflection
+
+![](img/p7.png)
+
+> The catch is that for big spheres or grazing rays, we may scatter below the surface. We can just have the surface absorb those.
