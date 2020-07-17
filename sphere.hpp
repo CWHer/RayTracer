@@ -14,7 +14,7 @@ public:
     Sphere() {}
     Sphere(Point3 _c, double _r) : center(_c), radius(_r) {}
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const
+    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
         Vec3 oc = r.origin() - center;
         auto a = r.direction().length_sqr();
@@ -30,7 +30,8 @@ public:
             {
                 rec.t = temp;
                 rec.p = r.at(rec.t);
-                rec.norm = (rec.p - center) / radius;
+                Vec3 outward_norm = (rec.p - center) / radius;
+                rec.set_face_normal(r, outward_norm);
                 return 1;
             }
             temp = (-half_b + root) / a; //positive root
@@ -39,6 +40,8 @@ public:
                 rec.t = temp;
                 rec.p = r.at(rec.t);
                 rec.norm = (rec.p - center) / radius;
+                Vec3 outward_norm = (rec.p - center) / radius;
+                rec.set_face_normal(r, outward_norm);
                 return 1;
             }
         }
