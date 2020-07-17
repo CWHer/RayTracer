@@ -109,7 +109,7 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 
 #### 主要模块
 
-|          |          |                                             |
+| name     |          | members                                     |
 | -------- | -------- | ------------------------------------------- |
 | Vec3     | 三维向量 | (x,y,z)                                     |
 | Ray      | 直线     | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
@@ -124,6 +124,13 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 
 
 #### 1.First PPM image
+
+![](img/p0.png)
+
+> - notice
+>
+> 1. The pixels are written out in rows with pixels left to right.
+> 2. The rows are written out from top to bottom.
 
 #### 2.A blue-to-white gradient depending on ray Y coordinate
 
@@ -165,3 +172,37 @@ $$
 > When a real camera takes a picture, there are usually no jaggies along edges because the edge pixels are a blend of some foreground and some background. We can get the same effect by averaging a bunch of samples inside each pixel.
 
 ![](img/p3.png)
+
+#### 7.Diffuse Materials(漫反射)
+
+> Light that reflects off a diffuse surface has its direction randomized.
+
+![](img/p4.png)
+
+> - A simple algorithm
+>
+> The sphere with a center at $(\mathbf{P} - \mathbf{n})$ is considered inside the surface, whereas the sphere with center  $(\mathbf{P} + \mathbf{n})$ is considered outside the surface. Select the tangent unit radius sphere that is on the same side of the surface as the ray origin. 
+>
+> Pick a random point $\mathbf{S}$ inside this unit radius sphere and send a ray from the hit point  $\mathbf{P}$ to the random point  $\mathbf{S}$
+
+![](img/p5.png)
+
+> - notice
+>
+> Make `ray_color` recursive to handle more than one diffuse reflections, while limit the maximum recursion depth.(It's brilliant!)
+>
+> - Gamma correction
+>
+> $$
+> V_{out}=A \cdot V_{in}^{\gamma}
+> $$
+>
+> - True Lambertian Reflection
+>
+> True Lambertian has the probability higher for ray scattering close to the normal, but the distribution is more uniform. This is achieved by picking points on the surface of the unit sphere, offset along the surface normal.
+>
+> Due to the more uniform scattering of the light rays, fewer rays are scattering toward the normal. This means that for diffuse objects, they will appear lighter because more **light** bounces toward the camera. For the shadows, less light bounces straight-up, so the parts of the larger sphere directly underneath the smaller sphere are **brighter**.
+>
+> - An Alternative Diffuse Formulation
+>
+> A more intuitive approach is to have a uniform scatter direction for all angles away from the hit point, with no dependence on the angle from the normal.

@@ -1,8 +1,7 @@
 #ifndef __Vec3__
 #define __Vec3__
 
-#include <cmath>
-#include <iostream>
+#include "raytracer.h"
 
 class Vec3
 {
@@ -23,6 +22,40 @@ private:
 public:
     Vec3() : e{0, 0, 0} {}
     Vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
+
+    inline static Vec3 random()
+    {
+        return Vec3(random_double(), random_double(), random_double());
+    }
+    inline static Vec3 random(double min, double max)
+    {
+        return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+    }
+    inline static Vec3 random_in_unit_sphere()
+    {
+        //old version
+        Vec3 p;
+        do
+        {
+            p = random(-1, 1);
+        } while (p.length() >= 1);
+        return p;
+    }
+    inline static Vec3 random_in_hemisphere(const Vec3 &normal)
+    { //a uniform scatter direction for all angles
+        Vec3 in_unit_sphere = random_in_unit_sphere();
+        if (dot(in_unit_sphere, normal) > 0) // In the same hemisphere as the normal
+            return in_unit_sphere;
+        else
+            return -in_unit_sphere;
+    }
+    inline static Vec3 random_unit_vector()
+    { //on the surface of a unit sphere
+        auto a = random_double(0, 2 * pi);
+        auto z = random_double(-1, 1);
+        auto r = sqrt(1 - z * z);
+        return Vec3(r * cos(a), r * sin(a), z);
+    }
 
     double x() const { return e[0]; }
     double y() const { return e[1]; }
@@ -120,6 +153,6 @@ inline Vec3 unit_vector(Vec3 v)
 // using point3 = Vec3;
 // using color = Vec3;
 typedef Vec3 Point3; // 3D point
-typedef Vec3 Color; // RGB color
+typedef Vec3 Color;  // RGB color
 
 #endif
