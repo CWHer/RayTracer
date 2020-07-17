@@ -64,7 +64,7 @@ int main()
             auto v = double(j) / (image_height - 1);
             Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); //the length of r.dir varies, so there is horizontal gradient too.
             Color pixel_color = ray_color(r);
-            write_color(std::cout, pixel_color);
+            write_color(std::cout, pixel_color, 1);
         }
     }
 

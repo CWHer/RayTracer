@@ -8,7 +8,7 @@ code for [RayTracingInOneWeekend](https://github.com/RayTracing/raytracing.githu
 
 #### 顺带学习一下C11/14/17的一些feature
 
-`override`：标识 for virtual function
+`override`：继承时标识 for virtual function
 
 `Initiallizer list`
 
@@ -115,7 +115,7 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 | Ray      | 直线     | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
 | Hittable | 抽象基类 |                                             |
 | Sphere   | 球       | c&r,hit(Ray,self)                           |
-|          |          |                                             |
+| Camera   |          | orig/LDcorner/vertical/horiontal            |
 |          |          |                                             |
 |          |          |                                             |
 |          |          |                                             |
@@ -160,7 +160,8 @@ $$
 >
 > This can be determined by taking the dot product of the two vectors, where if their dot is positive, the ray is inside the sphere.
 
+#### 6.Antialiasing
 
+> When a real camera takes a picture, there are usually no jaggies along edges because the edge pixels are a blend of some foreground and some background. We can get the same effect by averaging a bunch of samples inside each pixel.
 
-
-
+![](img/p3.png)
