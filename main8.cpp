@@ -56,7 +56,9 @@ int main()
         Point3(-1, 0, -1), 0.5, make_shared<Lambertian>(Color(0.1, 0.2, 0.5))));
 
     // Camera cam(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio);
-    Camera cam(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 20, aspect_ratio);
+    Point3 lookfrom(-2, 2, 1);
+    Point3 lookat(0, 0, -1);
+    Camera cam(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 20, aspect_ratio, 0, (lookfrom - lookat).length());
 
     for (int j = image_height - 1; j >= 0; --j)
     {

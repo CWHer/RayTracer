@@ -116,10 +116,11 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 | Hittable     | 可碰撞抽象基类   | hit                                         |
 | Sphere       | 球               | c&r,hit(Ray,self)                           |
 | HittableList |                  |                                             |
-| Camera       |                  | orig/LDcorner/vertical/horiontal            |
+| Camera       |                  | orig/LDcorner/vertical/horiontal...         |
 | Material     | 材质抽象基类     | produce scattered ray                       |
 | Lambertian   | diffuse          |                                             |
 | Metal        | mirrored reflect |                                             |
+| Dielectric   | refract          |                                             |
 
 
 
@@ -265,3 +266,5 @@ $$
 > $\mathbf{v}=\mathbf{w}\times\mathbf{u}$
 
 #### 11.Defocus Blur
+
+![](img/p11.png)

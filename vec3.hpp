@@ -27,6 +27,16 @@ public:
     double y() const { return e[1]; }
     double z() const { return e[2]; }
 
+    inline static Vec3 random()
+    {
+        return Vec3(random_double(), random_double(), random_double());
+    }
+
+    inline static Vec3 random(double min, double max)
+    {
+        return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+    }
+
     Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
     double operator[](int i) const { return e[i]; }
     double &operator[](int i) { return e[i]; }
@@ -116,23 +126,23 @@ inline Vec3 unit_vector(Vec3 v)
 }
 
 // rand functions
-inline Vec3 random()
-{
-    return Vec3(random_double(), random_double(), random_double());
-}
-
-inline Vec3 random(double min, double max)
-{
-    return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
-}
-
 inline Vec3 random_in_unit_sphere()
 {
     //old version
     Vec3 p;
     do
     {
-        p = random(-1, 1);
+        p = Vec3::random(-1, 1);
+    } while (p.length() >= 1);
+    return p;
+}
+
+inline Vec3 random_in_unit_disk()
+{
+    Vec3 p;
+    do
+    {
+        p = Vec3(random_double(-1, 1), random_double(-1, 1), 0);
     } while (p.length() >= 1);
     return p;
 }

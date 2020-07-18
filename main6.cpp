@@ -49,7 +49,7 @@ int main()
     // world.add(make_shared<Sphere>(Point3(-1, 0, -1), 0.5, make_shared<Metal>(Color(0.8, 0.8, 0.8))));
     world.add(make_shared<Sphere>(Point3(-1, -0.25, -1), 0.25, make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.7)));
 
-    Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio);
+    Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio, 0, 1);
 
     for (int j = image_height - 1; j >= 0; --j)
     {

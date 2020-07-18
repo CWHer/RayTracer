@@ -30,7 +30,7 @@ int main()
     world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
     world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
-    Camera cam;
+    Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio, 0, 1);
 
     for (int j = image_height - 1; j >= 0; --j)
     {
