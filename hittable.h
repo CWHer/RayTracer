@@ -3,6 +3,7 @@
 
 #include "ray.hpp"
 class Material;
+class AABB;
 
 struct hit_record
 {
@@ -24,6 +25,7 @@ class Hittable
 {
 public:
     virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const = 0;
+    virtual bool bounding_box(double t0, double t1, AABB &output_box) const = 0;
 };
 
 #endif

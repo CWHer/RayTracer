@@ -19,7 +19,7 @@ using std::sqrt;
 const double infinity = std::numeric_limits<double>::infinity();
 // const double pi = 3.1415926535897932385;
 const double pi = acos(-1);
-const double eps = 1e-3;
+const double eps = 1e-10;
 //used in hit tmin
 
 // Utility Functions
@@ -34,6 +34,14 @@ inline double degrees_to_radians(double degrees)
 //     // Returns a random real in [0,1).
 //     return rand() / (RAND_MAX + 1.0);
 // }
+
+inline int random_int(int min, int max)
+{
+    static std::random_device rd;
+    static std::mt19937 generator(rd());
+    static std::uniform_int_distribution<int> distribution(min, max);
+    return distribution(generator);
+}
 
 inline double random_double()
 {

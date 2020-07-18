@@ -4,6 +4,7 @@
 #include "raytracer.h"
 #include "hittable.h"
 #include "material.hpp"
+#include "aabb.hpp"
 
 class MovingSphere : public Hittable
 {
@@ -56,6 +57,18 @@ public:
             }
         }
         return 0;
+    }
+
+    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    {
+        AABB box0(
+            center(t0) - Vec3(radius, radius, radius),
+            center(t0) + Vec3(radius, radius, radius));
+        AABB box1(
+            center(t1) - Vec3(radius, radius, radius),
+            center(t1) + Vec3(radius, radius, radius));
+        output_box = surrounding_box(box0, box1);
+        return 1;
     }
 };
 

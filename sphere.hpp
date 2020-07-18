@@ -3,6 +3,7 @@
 
 #include "hittable.h"
 #include "vec3.hpp"
+#include "aabb.hpp"
 
 class Sphere : public Hittable
 {
@@ -49,6 +50,14 @@ public:
             }
         }
         return 0;
+    }
+
+    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    {
+        output_box = AABB(
+            center - Vec3(radius, radius, radius),
+            center + Vec3(radius, radius, radius));
+        return 1;
     }
 };
 

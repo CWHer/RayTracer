@@ -2,6 +2,7 @@
 #define __HITTABLELIST__
 
 #include "hittable.h"
+#include "aabb.hpp"
 
 #include <memory>
 #include <vector>
@@ -11,6 +12,8 @@ using std::shared_ptr;
 
 class HittableList : public Hittable
 {
+    friend class BVHnode;
+
 private:
     std::vector<shared_ptr<Hittable>> objects;
 
@@ -38,6 +41,23 @@ public:
         }
 
         return hit_anything;
+    }
+
+    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    {
+        if (objects.empty())
+            return 0;
+        AABB temp_box;
+        bool first_box = 1;
+
+        for (const auto &object : objects)
+        {
+            if (!object->bounding_box(t0, t1, temp_box))
+                return 0;
+            output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
+            first_box = 0;
+        }
+        return 1;
     }
 };
 
