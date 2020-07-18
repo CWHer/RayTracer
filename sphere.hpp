@@ -42,7 +42,6 @@ public:
             {
                 rec.t = temp;
                 rec.p = r.at(rec.t);
-                rec.norm = (rec.p - center) / radius;
                 Vec3 outward_norm = (rec.p - center) / radius;
                 rec.set_face_normal(r, outward_norm);
                 rec.mat_ptr = mat_ptr;
