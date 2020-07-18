@@ -251,3 +251,17 @@ $$
 >   When calculate hit() in Sphere class, $r^{2}$ is used in fomulations. So negetive radius functions well. Whereas when calculating the outward normal, negative radius results in a negative outward normal, which is actually inward normal.
 
 ![](img/image0.jpg)
+
+#### 10.Positionable Camera
+
+![](img/p9.png)
+
+![](img/p10.png)
+
+> And keep in mind that we can — but we don’t have to — use world up (0,1,0) to specify vup.
+>
+> $\mathbf{u}=\mathbf{vup}\times\mathbf{w}$
+>
+> $\mathbf{v}=\mathbf{w}\times\mathbf{u}$
+
+#### 11.Defocus Blur

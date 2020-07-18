@@ -55,7 +55,7 @@ int main()
     world.add(make_shared<Sphere>(
         Point3(-1, 0, -1), 0.5, make_shared<Lambertian>(Color(0.1, 0.2, 0.5))));
 
-    Camera cam;
+    Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio);
 
     for (int j = image_height - 1; j >= 0; --j)
     {
