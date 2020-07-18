@@ -159,6 +159,14 @@ Vec3 reflect(const Vec3 &v, const Vec3 &n)
     return v - 2 * dot(v, n) * n;
 }
 
+Vec3 refract(const Vec3 &uv, const Vec3 &n, double etai_over_etat)
+{ //uv should be unit vector
+    auto cos_theta = dot(-uv, n);
+    Vec3 r_out_parallel = etai_over_etat * (uv + cos_theta * n);
+    Vec3 r_out_perp = -sqrt(1.0 - r_out_parallel.length_sqr()) * n;
+    return r_out_parallel + r_out_perp;
+}
+
 // Type aliases for Vec3
 // using point3 = Vec3;
 // using color = Vec3;

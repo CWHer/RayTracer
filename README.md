@@ -222,3 +222,32 @@ Fuzzy Reflection
 ![](img/p7.png)
 
 > The catch is that for big spheres or grazing rays, we may scatter below the surface. We can just have the surface absorb those.
+
+#### 9.Dielectrics
+
+> When a light ray hits them, it splits into a reflected ray and a refracted (transmitted) ray. We’ll handle that by randomly choosing between reflection or refraction, and only generating one scattered ray per interaction.
+
+![](img/p8.png)
+$$
+\sin\theta' = \frac{\eta}{\eta'} \cdot \sin\theta
+$$
+
+$$
+\mathbf{R'}_{\parallel} = \frac{\eta}{\eta'} (\mathbf{R} + \cos\theta \mathbf{n})
+$$
+
+$$
+\mathbf{R'}_{\bot} = -\sqrt{1 - |\mathbf{R'}_{\parallel}|^2} \mathbf{n}
+$$
+
+> notice:Total Internal Reflection
+
+> - Schlick Approximation
+>
+> - Modeling a Hollow Glass Sphere
+>
+>   An interesting and easy trick with dielectric spheres is to note that if you use a negative radius, the geometry is unaffected, but the surface normal points inward. This can be used as a bubble to make a hollow glass sphere.
+>
+>   When calculate hit() in Sphere class, $r^{2}$ is used in fomulations. So negetive radius functions well. Whereas when calculating the outward normal, negative radius results in a negative outward normal, which is actually inward normal.
+
+![](img/image0.jpg)
