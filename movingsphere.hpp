@@ -1,24 +1,31 @@
-#ifndef __SPHERE__
-#define __SPHERE__
+#ifndef __MOVINGSPHERE__
+#define __MOVINGSPHERE__
 
+#include "raytracer.h"
 #include "hittable.h"
-#include "vec3.hpp"
+#include "material.hpp"
 
-class Sphere : public Hittable
+class MovingSphere : public Hittable
 {
 private:
-    Point3 center;
+    Point3 center0, center1;
+    double time0, time1;
     double radius;
     shared_ptr<Material> mat_ptr;
 
 public:
-    Sphere() {}
-    Sphere(Point3 _c, double _r, shared_ptr<Material> _mat_ptr)
-        : center(_c), radius(_r), mat_ptr(_mat_ptr) {}
+    MovingSphere() {}
+    MovingSphere(Point3 _cen0, Point3 _cen1, double _t0, double _t1, double _r, shared_ptr<Material> _m)
+        : center0(_cen0), center1(_cen1), time0(_t0), time1(_t1), radius(_r), mat_ptr(_m) {}
+
+    Point3 center(double time) const
+    {
+        return center0 + ((time - time0) / (time1 - time0)) * (center1 - center0);
+    }
 
     bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
-        Vec3 oc = r.origin() - center;
+        Vec3 oc = r.origin() - center(r.time());
         auto a = r.direction().length_sqr();
         auto half_b = dot(oc, r.direction());
         auto c = oc.length_sqr() - radius * radius;
@@ -32,7 +39,7 @@ public:
             {
                 rec.t = temp;
                 rec.p = r.at(rec.t);
-                Vec3 outward_norm = (rec.p - center) / radius;
+                Vec3 outward_norm = (rec.p - center(r.time())) / radius;
                 rec.set_face_normal(r, outward_norm);
                 rec.mat_ptr = mat_ptr;
                 return 1;
@@ -42,7 +49,7 @@ public:
             {
                 rec.t = temp;
                 rec.p = r.at(rec.t);
-                Vec3 outward_norm = (rec.p - center) / radius;
+                Vec3 outward_norm = (rec.p - center(r.time())) / radius;
                 rec.set_face_normal(r, outward_norm);
                 rec.mat_ptr = mat_ptr;
                 return 1;

@@ -13,21 +13,9 @@ private:
     Vec3 vertical;
     Vec3 u, v, w;
     double lens_radius;
+    double time0, time1; //open/close times
 
 public:
-    // Camera()
-    // {
-    //     const auto aspect_ratio = 16.0 / 9;
-    //     auto viewport_height = 2.0;
-    //     auto viewport_width = aspect_ratio * viewport_height;
-    //     auto focal_length = 1.0;
-
-    //     origin = Point3(0, 0, 0);
-    //     horizontal = Vec3(viewport_width, 0, 0);
-    //     vertical = Vec3(0, viewport_height, 0);
-    //     lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
-    // }
-
     Camera(
         Point3 lookfrom,
         Point3 lookat,
@@ -35,7 +23,9 @@ public:
         double vfov, // vertical field-of-view in degrees
         double aspect_ratio,
         double aperture,
-        double focus_dist)
+        double focus_dist,
+        double t0 = 0,
+        double t1 = 0)
     {
         auto theta = degrees_to_radians(vfov);
         auto h = tan(theta / 2);
@@ -52,13 +42,17 @@ public:
         lower_left_corner = origin - horizontal / 2 - vertical / 2 - focus_dist * w;
 
         lens_radius = aperture / 2;
+        time0 = t0, time1 = t1;
     }
 
     Ray get_ray(double s, double t) const
     { //origin->(u,v)
         Vec3 rd = lens_radius * random_in_unit_disk();
         Vec3 offset = u * rd.x() + v * rd.y();
-        return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset);
+        return Ray(
+            origin + offset,
+            lower_left_corner + s * horizontal + t * vertical - origin - offset,
+            random_double(time0, time1));
     }
 };
 

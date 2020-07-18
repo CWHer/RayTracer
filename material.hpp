@@ -27,7 +27,7 @@ public:
         const Ray &r_in, const hit_record &rec, Color &attenuation, Ray &scattered) const override
     {
         Vec3 scatter_dir = rec.norm + random_unit_vector();
-        scattered = Ray(rec.p, scatter_dir);
+        scattered = Ray(rec.p, scatter_dir, r_in.time()); //default time is 0
         attenuation = albedo;
         return 1;
     }
