@@ -5,6 +5,7 @@
 #include "camera.hpp"
 #include "material.hpp"
 #include "movingsphere.hpp"
+#include "texture.hpp"
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
@@ -30,7 +31,10 @@ HittableList random_scene()
 {
     HittableList world;
 
-    auto ground_material = make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+    auto checker = make_shared<CheckerTexture>(
+        make_shared<SolidColor>(0.2, 0.3, 0.1),
+        make_shared<SolidColor>(0.9, 0.9, 0.9));
+    auto ground_material = make_shared<Lambertian>(checker);
     world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++)
@@ -48,7 +52,7 @@ HittableList random_scene()
                 {
                     // diffuse
                     auto albedo = Color::random() * Color::random();
-                    sphere_material = make_shared<Lambertian>(albedo);
+                    sphere_material = make_shared<Lambertian>(make_shared<SolidColor>(albedo));
                     auto center2 = center + Vec3(0, random_double(0, 0.5), 0);
                     world.add(make_shared<MovingSphere>(center, center2, 0, 1, 0.2, sphere_material));
                 }
@@ -73,7 +77,7 @@ HittableList random_scene()
     auto material1 = make_shared<Dielectric>(1.5);
     world.add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, material1));
 
-    auto material2 = make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+    auto material2 = make_shared<Lambertian>(make_shared<SolidColor>(0.4, 0.2, 0.1));
     world.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
 
     auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
@@ -86,6 +90,7 @@ int main()
 {
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 576; //384
+    // const int image_width = 384;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 50;

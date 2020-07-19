@@ -6,6 +6,7 @@
 #define __MATERIAL__
 
 #include "raytracer.h"
+#include "texture.hpp"
 
 class Material
 {
@@ -17,9 +18,10 @@ public:
 class Lambertian : public Material
 {
 private:
-    Color albedo; //similar to reflectance
+    shared_ptr<Texture> albedo;
+
 public:
-    Lambertian(const Color &_a) : albedo(_a) {}
+    Lambertian(shared_ptr<Texture> _a) : albedo(_a) {}
 
     // scatter always and attenuate by its reflectance R
     // Note we could just as well only scatter with some probability p and have attenuation be albedo/p.
@@ -28,7 +30,7 @@ public:
     {
         Vec3 scatter_dir = rec.norm + random_unit_vector();
         scattered = Ray(rec.p, scatter_dir, r_in.time()); //default time is 0
-        attenuation = albedo;
+        attenuation = albedo->value(rec.u, rec.v, rec.p);
         return 1;
     }
 };
