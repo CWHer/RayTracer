@@ -52,6 +52,7 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = two_spheres();
+    world.build();
 
     Point3 lookfrom(13, 2, 3);
     Point3 lookat(0, 0, 0);

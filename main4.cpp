@@ -53,6 +53,7 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = earth();
+    world.build();
 
     Point3 lookfrom(0, 0, 15);
     Point3 lookat(0, 0, 0);

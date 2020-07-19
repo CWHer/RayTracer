@@ -128,3 +128,5 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >   image_data is left upper corner.
 >
 >   $\theta=-\pi /2 \rightarrow u=0 $
+
+#### 6.Rectangles and Lights

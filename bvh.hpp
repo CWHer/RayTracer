@@ -1,9 +1,9 @@
 #ifndef __BVH__
 #define __BVH__
 
+#include "raytracer.h"
 #include "hittable.h"
 #include "aabb.hpp"
-#include "hittablelist.hpp"
 #include "ray.hpp"
 
 #include <algorithm>
@@ -17,20 +17,25 @@ private:
 
 public:
     BVHnode() {}
-    BVHnode(HittableList &list, double time0, double time1)
-        : BVHnode(list.objects, 0, list.objects.size(), time0, time1) {}
 
     BVHnode(
         std::vector<shared_ptr<Hittable>> &objects,
+        size_t start, size_t end, double time0, double time1)
+    {
+        build(objects, start, end, time0, time1);
+    }
+
+    void build(
+        std::vector<shared_ptr<Hittable>> &objects,
         size_t start, size_t end, double time0, double time1);
 
-    bool hit(const Ray &r, double t_min, double t_max, hit_record &rec) const override
+    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
-        if (!box.hit(r, t_min, t_max)) //might be NULL?
+        if (!box.hit(r, tmin, tmax))
             return 0;
 
-        bool hit_left = left->hit(r, t_min, t_max, rec);
-        bool hit_right = right->hit(r, t_min, hit_left ? rec.t : t_max, rec);
+        bool hit_left = left->hit(r, tmin, tmax, rec);
+        bool hit_right = right->hit(r, tmin, hit_left ? rec.t : tmax, rec);
         //hit the closet obj
 
         return hit_left | hit_right;
@@ -70,8 +75,8 @@ bool box_z_cmp(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
 // 1. randomly choose an axis
 // 2. sort the primitives (using std::sort)
 // 3. put half in each subtree
-BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
-                 size_t start, size_t end, double time0, double time1)
+void BVHnode::build(std::vector<shared_ptr<Hittable>> &objects,
+                    size_t start, size_t end, double time0, double time1)
 {
     int axis = random_int(0, 2);
     auto cmp = axis == 0 ? box_x_cmp
@@ -80,12 +85,12 @@ BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
 
     if (object_span == 1)
     {
-        left = right = objects[end];
+        left = right = objects[start];
     }
     else if (object_span == 2)
     {
         left = objects[start];
-        right = objects[end];
+        right = objects[start + 1];
         if (!cmp(left, right))
             std::swap(left, right);
     }

@@ -1,8 +1,10 @@
 #ifndef __HITTABLELIST__
 #define __HITTABLELIST__
 
+#include "raytracer.h"
 #include "hittable.h"
 #include "aabb.hpp"
+#include "bvh.hpp"
 
 #include <memory>
 #include <vector>
@@ -12,10 +14,9 @@ using std::shared_ptr;
 
 class HittableList : public Hittable
 {
-    friend class BVHnode;
-
 private:
     std::vector<shared_ptr<Hittable>> objects;
+    shared_ptr<BVHnode> root; //BVH
 
 public:
     HittableList() {}
@@ -24,23 +25,33 @@ public:
     void clear() { objects.clear(); }
     void add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    // bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    // {
+    //     hit_record temp_rec;
+    //     bool hit_anything = false;
+    //     auto closest_so_far = tmax;
+
+    //     for (const auto &object : objects)
+    //     {
+    //         if (object->hit(r, tmin, closest_so_far, temp_rec)) //only hit the closest one
+    //         {
+    //             hit_anything = true;
+    //             closest_so_far = temp_rec.t;
+    //             rec = temp_rec;
+    //         }
+    //     }
+
+    //     return hit_anything;
+    // }
+
+    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
-        hit_record temp_rec;
-        bool hit_anything = false;
-        auto closest_so_far = tmax;
+        return root->hit(r, tmin, tmax, rec);
+    }
 
-        for (const auto &object : objects)
-        {
-            if (object->hit(r, tmin, closest_so_far, temp_rec)) //only hit the closest one
-            {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
-            }
-        }
-
-        return hit_anything;
+    void build()
+    {
+        root = make_shared<BVHnode>(objects, 0, objects.size(), eps, infinity);
     }
 
     bool bounding_box(double t0, double t1, AABB &output_box) const override

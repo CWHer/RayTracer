@@ -6,6 +6,8 @@
 #include "material.hpp"
 #include "movingsphere.hpp"
 #include "texture.hpp"
+#include "bvh.hpp"
+#include <ctime>
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
@@ -88,6 +90,8 @@ HittableList random_scene()
 
 int main()
 {
+    double t = std::clock();
+
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 576; //384
     // const int image_width = 384;
@@ -99,6 +103,7 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = random_scene();
+    world.build();
 
     Point3 lookfrom(13, 2, 3);
     Point3 lookat(0, 0, 0);
@@ -126,4 +131,5 @@ int main()
     }
 
     std::cerr << "\nDone.\n";
+    std::cerr << (std::clock() - t) / CLOCKS_PER_SEC;
 }
