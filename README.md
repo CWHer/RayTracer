@@ -83,3 +83,28 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 > - Checker Texture
 >
 > We can create a checker texture by noting that the sign of sine and cosine just alternates in a regular way, and if we multiply trig functions in all three dimensions, the sign of that product forms a 3D checker pattern.
+
+#### 4.Perlin Noise
+
+- [ ] why does it work?
+
+> - Smoothing out the Result
+>
+>   linearly interpolate
+>
+> - Hermitian Smoothing
+>
+>   use a Hermite cubic to round off the interpolation
+>
+> - Tweaking The Frequency
+>
+> - Using Random Vectors on the Lattice Points
+>
+>   use a dot product to move the min and max off the lattice
+>
+> - Turbulence
+>
+>   a composite noise that has multiple summed frequencies
+>
+>   The basic idea is to make color proportional to something like a sine function, and use turbulence to adjust the phase (so it shifts x in sin(x)) which makes the stripes undulate.
+

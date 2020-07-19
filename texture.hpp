@@ -2,6 +2,7 @@
 #define __TEXTURE__
 
 #include "raytracer.h"
+#include "perlin.hpp"
 
 class Texture
 {
@@ -44,6 +45,27 @@ public:
             return odd->value(u, v, p);
         else
             return even->value(u, v, p);
+    }
+};
+
+class NoiseTexture : public Texture
+{
+private:
+    Perlin noise;
+    double scale; //larger scale means more frequent
+
+public:
+    NoiseTexture() : scale(1) {}
+    NoiseTexture(double _scale) : scale(_scale) {}
+
+    // Color value(double u, double v, const Point3 &p) const override
+    // {
+    //     return Color(1, 1, 1) * 0.5 * (1.0 + noise.noise(scale * p));
+    // }
+
+    Color value(double u, double v, const Point3 &p) const override
+    { //marble-like effect
+        return Color(1, 1, 1) * 0.5 * (1 + sin(scale * p.z() + 10 * noise.turb(p)));
     }
 };
 
