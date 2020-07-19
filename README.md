@@ -11,16 +11,18 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 | Vec3           | 三维向量                    | (x,y,z)                                     |
 | Ray            | 直线                        | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
 | Hittable       | 可碰撞抽象基类              | hit_record/hit/bounding_box                 |
+| FlipFace       | flip normal                 |                                             |
 | Sphere         | 球                          | c&r,hit(Ray,self)                           |
 | MovingSphere   |                             |                                             |
 | HittableList   |                             |                                             |
 | Camera         |                             | orig/LDcorner/vertical/horiontal...         |
-| Material       | 材质抽象基类                | produce scattered ray                       |
+| Material       | 材质抽象基类                | produce scattered ray/emit                  |
 | Lambertian     | diffuse                     |                                             |
 | Metal          | mirrored reflect            |                                             |
 | Dielectric     | refract                     |                                             |
 | AABB           | Axis-Aligned Bounding Boxes |                                             |
 | BVH            |                             |                                             |
+| AARect         | Axis-Aligned rect           |                                             |
 | Texture        | 纹理抽象基类                |                                             |
 | SolidColor     |                             |                                             |
 | CheckerTexture |                             |                                             |

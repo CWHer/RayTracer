@@ -29,4 +29,26 @@ public:
     virtual bool bounding_box(double t0, double t1, AABB &output_box) const = 0;
 };
 
+class FlipFace : public Hittable
+{
+private:
+    shared_ptr<Hittable> ptr;
+
+public:
+    FlipFace(shared_ptr<Hittable> _p) : ptr(_p) {}
+
+    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    {
+        if (!ptr->hit(r, tmin, tmax, rec))
+            return 0;
+        rec.front_face ^= 1;
+        return 1;
+    }
+
+    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    {
+        return ptr->bounding_box(t0, t1, output_box);
+    }
+};
+
 #endif
