@@ -109,9 +109,9 @@ public:
         if (data == nullptr)
             return Color(0, 1, 1);
 
-        // Clamp input texture coordinates to [0,1] x [1,0]
+        // Clamp input texture coordinates to [0,1] x [0,1]
         u = clamp(u, 0.0, 1.0);
-        v = clamp(v, 0.0, 1.0); // Flip V to image coordinates
+        v = clamp(v, 0.0, 1.0);
 
         auto i = static_cast<int>(u * width);
         auto j = static_cast<int>(v * height);
