@@ -12,6 +12,21 @@ private:
     double radius;
     shared_ptr<Material> mat_ptr;
 
+    //u:phi v:theta
+    void get_sphere_uv(const Vec3 &p, double &u, double &v) const
+    {
+        //z=cos(phi)
+        //x=sin(phi)cos(theta)
+        //y=sin(phi)sin(theta)
+        //u=phi/(2pi) v=theta/pi
+        //the coordinates of this image is different from origin
+        //orgin->this x->z y->x z->y
+        auto theta = atan2(p.x(), p.z());
+        auto phi = acos(p.y());
+        u = (theta + pi) / (2 * pi); //notice:-90->0
+        v = phi / pi;
+    }
+
 public:
     Sphere() {}
     Sphere(Point3 _c, double _r, shared_ptr<Material> _mat_ptr)
@@ -35,6 +50,7 @@ public:
                 rec.p = r.at(rec.t);
                 Vec3 outward_norm = (rec.p - center) / radius;
                 rec.set_face_normal(r, outward_norm);
+                get_sphere_uv((rec.p - center) / radius, rec.u, rec.v);
                 rec.mat_ptr = mat_ptr;
                 return 1;
             }
@@ -45,6 +61,7 @@ public:
                 rec.p = r.at(rec.t);
                 Vec3 outward_norm = (rec.p - center) / radius;
                 rec.set_face_normal(r, outward_norm);
+                get_sphere_uv((rec.p - center) / radius, rec.u, rec.v);
                 rec.mat_ptr = mat_ptr;
                 return 1;
             }
@@ -58,20 +75,6 @@ public:
             center - Vec3(radius, radius, radius),
             center + Vec3(radius, radius, radius));
         return 1;
-    }
-
-    //get_sphere_uv((rec.p-center)/radius, rec.u, rec.v);
-    void get_sphere_uv(const Vec3 &p, double &u, double &v) //???
-    {
-        //z=sin(theta)
-        //x=cos(theta)cos(phi)
-        //y=cos(theta)sin(phi)
-        //u=phi/(2pi) v=theta/pi
-        //not consist with fomulations...???
-        auto phi = atan2(p.z(), p.x());
-        auto theta = asin(p.y());
-        u = 1 - (phi + pi) / (2 * pi);
-        v = (theta + pi / 2) / pi;
     }
 };
 

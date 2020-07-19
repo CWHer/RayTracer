@@ -24,7 +24,9 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 | Texture        | 纹理抽象基类                |                                             |
 | SolidColor     |                             |                                             |
 | CheckerTexture |                             |                                             |
-
+| NoiseTexture   |                             |                                             |
+| IMGTexture     |                             |                                             |
+| Perlin         |                             |                                             |
 
 
 
@@ -72,12 +74,15 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 
 > - spherical coordinates
 >
+>   `another version`
+>
+> ![](img/p4.png)
 > $$
-> u = \frac{\phi}{2\pi}
+> u = \frac{\theta+\pi}{2\pi}
 > $$
 >
 > $$
-> v = \frac{\theta}{\pi}
+> v = \frac{\varphi}{\pi}
 > $$
 >
 > - Checker Texture
@@ -108,3 +113,18 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >
 >   The basic idea is to make color proportional to something like a sine function, and use turbulence to adjust the phase (so it shifts x in sin(x)) which makes the stripes undulate.
 
+#### 5.Image Texture Mapping
+
+> $$
+> u = \frac{i}{N_x-1}
+> $$
+>
+> $$
+> v = \frac{j}{N_y-1}
+> $$
+>
+> - notice
+>
+>   image_data is left upper corner.
+>
+>   $\theta=-\pi /2 \rightarrow u=0 $
