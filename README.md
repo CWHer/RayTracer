@@ -143,3 +143,23 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 > Unlike the situation with translations, the surface normal vector also changes, so we need to transform directions too if we get a hit.
 
 ![](img/p6.png)
+
+#### 8.Volumes
+
+- [ ] It's possible to write an implementation that handles arbitrary shapes, but we'll leave that as an exercise for the reader.
+
+![](img/p7.png)
+$$
+\mathrm{d}N=-C\cdot \mathrm{d}L
+$$
+
+$$
+\Rightarrow Pro=e^{-CL}
+$$
+
+> where $C$ is proportional to the optical density of the volume
+
+> The reason we have to be so careful about the logic around the boundary is we need to make sure this works for ray origins inside the volume. 
+>
+> In addition, the above code assumes that once a ray exits the constant medium boundary, it will continue forever outside the boundary. Put another way, it assumes that the boundary shape is convex. So this particular implementation will work for boundaries like boxes or spheres, but will not work with toruses or shapes that contain voids.
+
