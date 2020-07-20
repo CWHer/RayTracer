@@ -85,7 +85,10 @@ HittableList random_scene()
     auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
-    return world;
+    HittableList objects;
+    objects.add(make_shared<BVHnode>(world, 0, 1));
+
+    return objects;
 }
 
 int main()
@@ -93,7 +96,7 @@ int main()
     double t = std::clock();
 
     const auto aspect_ratio = 16.0 / 9.0;
-    const int image_width = 576; //384
+    const int image_width = 576; 
     // const int image_width = 384;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
@@ -103,7 +106,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = random_scene();
-    world.build();
 
     Point3 lookfrom(13, 2, 3);
     Point3 lookat(0, 0, 0);

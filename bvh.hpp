@@ -3,6 +3,7 @@
 
 #include "raytracer.h"
 #include "hittable.h"
+#include "hittablelist.hpp"
 #include "aabb.hpp"
 #include "ray.hpp"
 
@@ -18,14 +19,10 @@ private:
 public:
     BVHnode() {}
 
-    BVHnode(
-        std::vector<shared_ptr<Hittable>> &objects,
-        size_t start, size_t end, double time0, double time1)
-    {
-        build(objects, start, end, time0, time1);
-    }
+    BVHnode(HittableList &list, double time0, double time1)
+        : BVHnode(list.objects, 0, list.objects.size(), time0, time1) {}
 
-    void build(
+    BVHnode(
         std::vector<shared_ptr<Hittable>> &objects,
         size_t start, size_t end, double time0, double time1);
 
@@ -75,7 +72,7 @@ bool box_z_cmp(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
 // 1. randomly choose an axis
 // 2. sort the primitives (using std::sort)
 // 3. put half in each subtree
-void BVHnode::build(std::vector<shared_ptr<Hittable>> &objects,
+BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
                     size_t start, size_t end, double time0, double time1)
 {
     int axis = random_int(0, 2);

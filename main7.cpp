@@ -8,6 +8,7 @@
 #include "texture.hpp"
 #include "aarect.hpp"
 #include "box.hpp"
+#include "bvh.hpp"
 
 #include <ctime>
 
@@ -57,7 +58,10 @@ HittableList cornell_box()
     box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
     objects.add(box2);
 
-    return objects;
+    HittableList world;
+    world.add(make_shared<BVHnode>(objects, 0, 1));
+
+    return world;
 }
 
 int main()
@@ -76,7 +80,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = cornell_box();
-    world.build();
 
     Point3 lookfrom(278, 278, -800);
     Point3 lookat(278, 278, 0);

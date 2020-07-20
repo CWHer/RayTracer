@@ -7,6 +7,7 @@
 #include "movingsphere.hpp"
 #include "texture.hpp"
 #include "aarect.hpp"
+#include "bvh.hpp"
 
 Color ray_color(const Ray &r, const Color &background, const Hittable &world, int depth)
 {
@@ -40,7 +41,10 @@ HittableList simple_light()
     objects.add(make_shared<Sphere>(Point3(0, 7, 0), 2, difflight));
     objects.add(make_shared<XYRect>(3, 5, 1, 3, -2, difflight));
 
-    return objects;
+    HittableList world;
+    world.add(make_shared<BVHnode>(objects, 0, 1));
+
+    return world;
 }
 
 int main()
@@ -56,7 +60,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = simple_light();
-    world.build();
 
     Point3 lookfrom(8, 2, 3);
     Point3 lookat(0, 0, 0);

@@ -15,15 +15,17 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 | Sphere         | 球                          | c&r,hit(Ray,self)                           |
 | MovingSphere   |                             |                                             |
 | HittableList   |                             |                                             |
+| AABB           | Axis-Aligned Bounding Boxes |                                             |
+| BVH            |                             |                                             |
+| AARect         | Axis-Aligned rect           |                                             |
+| Box            |                             |                                             |
+| ConstantMedium |                             |                                             |
 | Camera         |                             | orig/LDcorner/vertical/horiontal...         |
 | Material       | 材质抽象基类                | produce scattered ray/emit                  |
 | Lambertian     | diffuse                     |                                             |
 | Metal          | mirrored reflect            |                                             |
 | Dielectric     | refract                     |                                             |
-| AABB           | Axis-Aligned Bounding Boxes |                                             |
-| BVH            |                             |                                             |
-| AARect         | Axis-Aligned rect           |                                             |
-| Box            |                             |                                             |
+| Isotropic      |                             |                                             |
 | Texture        | 纹理抽象基类                |                                             |
 | SolidColor     |                             |                                             |
 | CheckerTexture |                             |                                             |
@@ -163,3 +165,6 @@ $$
 >
 > In addition, the above code assumes that once a ray exits the constant medium boundary, it will continue forever outside the boundary. Put another way, it assumes that the boundary shape is convex. So this particular implementation will work for boundaries like boxes or spheres, but will not work with toruses or shapes that contain voids.
 
+#### 9.A Scene Testing All New Features
+
+> The biggest limitation left in the renderer is no shadow rays, but that is why we get caustics and subsurface for free. It’s a double-edged design decision.

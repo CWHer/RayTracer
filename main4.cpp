@@ -6,6 +6,7 @@
 #include "material.hpp"
 #include "movingsphere.hpp"
 #include "texture.hpp"
+#include "bvh.hpp"
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
@@ -37,7 +38,11 @@ HittableList earth()
     auto globe = make_shared<Sphere>(Point3(0, 0, 0), 2, earth_surface);
 
     objects.add(globe);
-    return objects;
+
+    HittableList world;
+    world.add(make_shared<BVHnode>(objects, 0, 1));
+
+    return world;
 }
 
 int main()
@@ -53,7 +58,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = earth();
-    world.build();
 
     Point3 lookfrom(0, 0, 15);
     Point3 lookat(0, 0, 0);

@@ -9,6 +9,7 @@
 #include "aarect.hpp"
 #include "box.hpp"
 #include "constantmedium.hpp"
+#include "bvh.hpp"
 
 #include <ctime>
 
@@ -59,7 +60,10 @@ HittableList cornell_smoke()
     objects.add(make_shared<ConstantMedium>(box1, 0.01, make_shared<SolidColor>(0, 0, 0)));
     objects.add(make_shared<ConstantMedium>(box2, 0.01, make_shared<SolidColor>(1, 1, 1)));
 
-    return objects;
+    HittableList world;
+    world.add(make_shared<BVHnode>(objects, 0, 1));
+
+    return world;
 }
 
 int main()
@@ -68,8 +72,8 @@ int main()
 
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 1.0;
-    const int image_width = 576; //384
-    // const int image_width = 384;
+    // const int image_width = 576; 
+    const int image_width = 384;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 200;
     const int max_depth = 50;
@@ -78,7 +82,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = cornell_smoke();
-    world.build();
 
     Point3 lookfrom(278, 278, -800);
     Point3 lookat(278, 278, 0);

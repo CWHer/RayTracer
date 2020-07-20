@@ -7,6 +7,7 @@
 #include "movingsphere.hpp"
 #include "texture.hpp"
 #include "aarect.hpp"
+#include "bvh.hpp"
 
 Color ray_color(const Ray &r, const Color &background, const Hittable &world, int depth)
 {
@@ -44,7 +45,10 @@ HittableList cornell_box()
     objects.add(make_shared<XZRect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
 
-    return objects;
+    HittableList world;
+    world.add(make_shared<BVHnode>(objects, 0, 1));
+
+    return world;
 }
 
 int main()
@@ -61,7 +65,6 @@ int main()
               << image_width << ' ' << image_height << "\n255\n";
 
     HittableList world = cornell_box();
-    world.build();
 
     Point3 lookfrom(278, 278, -800);
     Point3 lookat(278, 278, 0);
