@@ -15,6 +15,7 @@ using std::shared_ptr;
 class HittableList : public Hittable
 {
 private:
+    static const size_t threshold = 10;
     std::vector<shared_ptr<Hittable>> objects;
     shared_ptr<BVHnode> root; //BVH
 
@@ -25,32 +26,36 @@ public:
     void clear() { objects.clear(); }
     void add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    // bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
-    // {
-    //     hit_record temp_rec;
-    //     bool hit_anything = false;
-    //     auto closest_so_far = tmax;
+    bool hit_force(const Ray &r, double tmin, double tmax, hit_record &rec) const
+    {
+        hit_record temp_rec;
+        bool hit_anything = 0;
+        auto closest_so_far = tmax;
 
-    //     for (const auto &object : objects)
-    //     {
-    //         if (object->hit(r, tmin, closest_so_far, temp_rec)) //only hit the closest one
-    //         {
-    //             hit_anything = true;
-    //             closest_so_far = temp_rec.t;
-    //             rec = temp_rec;
-    //         }
-    //     }
+        for (const auto &object : objects)
+        {
+            if (object->hit(r, tmin, closest_so_far, temp_rec)) //only hit the closest one
+            {
+                hit_anything = 1;
+                closest_so_far = temp_rec.t;
+                rec = temp_rec;
+            }
+        }
 
-    //     return hit_anything;
-    // }
+        return hit_anything;
+    }
 
     bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
+        if (objects.size() <= threshold)
+            return hit_force(r, tmin, tmax, rec);
         return root->hit(r, tmin, tmax, rec);
     }
 
     void build()
     {
+        if (objects.size() <= threshold)
+            return;
         root = make_shared<BVHnode>(objects, 0, objects.size(), eps, infinity);
     }
 

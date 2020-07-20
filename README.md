@@ -10,7 +10,7 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 | -------------- | --------------------------- | ------------------------------------------- |
 | Vec3           | 三维向量                    | (x,y,z)                                     |
 | Ray            | 直线                        | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
-| Hittable       | 可碰撞抽象基类              | hit_record/hit/bounding_box                 |
+| Hittable       | 可碰撞抽象基类              | hit_record/hit/bounding_box/Instances       |
 | FlipFace       | flip normal                 |                                             |
 | Sphere         | 球                          | c&r,hit(Ray,self)                           |
 | MovingSphere   |                             |                                             |
@@ -23,6 +23,7 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 | AABB           | Axis-Aligned Bounding Boxes |                                             |
 | BVH            |                             |                                             |
 | AARect         | Axis-Aligned rect           |                                             |
+| Box            |                             |                                             |
 | Texture        | 纹理抽象基类                |                                             |
 | SolidColor     |                             |                                             |
 | CheckerTexture |                             |                                             |
@@ -132,3 +133,13 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >   $\theta=-\pi /2 \rightarrow u=0 $
 
 #### 6.Rectangles and Lights
+
+#### 7.Instances
+
+>  instead we move the rays in the opposite direction
+
+![](img/p5.png)
+
+> Unlike the situation with translations, the surface normal vector also changes, so we need to transform directions too if we get a hit.
+
+![](img/p6.png)
