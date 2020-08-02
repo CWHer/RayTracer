@@ -33,4 +33,10 @@ code for [RayTracingTheRestofYourLife](https://github.com/RayTracing/raytracing.
 | IMGTexture     |                             |                                             |
 | Perlin         |                             |                                             |
 
+#### 1.A Simple Monte Carlo Program
 
+#### 2.One Dimensional MC Integration
+
+#### 3.MC Integration on the Sphere of Directions
+
+蒙特卡洛积分 - chopper的文章 - 知乎 https://zhuanlan.zhihu.com/p/146144853
