@@ -24,12 +24,28 @@ Color ray_color(const Ray &r, const Color &background, const Hittable &world, in
 
     Ray scattered;
     Color attenutaion;
-    Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+    Color emitted = rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
     double pdf;
     Color albedo;
 
     if (!rec.mat_ptr->scatter(r, rec, albedo, scattered, pdf))
         return emitted;
+
+    auto on_light = Point3(random_double(213, 343), 554, random_double(227, 332));
+    auto to_light = on_light - rec.p;
+    auto distance_squared = to_light.length_sqr();
+    to_light = unit_vector(to_light);
+
+    if (dot(to_light, rec.norm) < 0)
+        return emitted;
+
+    double light_area = (343 - 213) * (332 - 227);
+    auto light_cosine = fabs(to_light.y());
+    if (light_cosine < eps)
+        return emitted;
+
+    pdf = distance_squared / (light_cosine * light_area);
+    scattered = Ray(rec.p, to_light, r.time());
 
     return emitted +
            albedo * rec.mat_ptr->scattering_pdf(r, rec, scattered) *
@@ -47,7 +63,7 @@ HittableList cornell_box()
 
     objects.add(make_shared<FlipFace>(make_shared<YZRect>(0, 555, 0, 555, 555, green)));
     objects.add(make_shared<YZRect>(0, 555, 0, 555, 0, red));
-    objects.add(make_shared<XZRect>(213, 343, 227, 332, 554, light));
+    objects.add(make_shared<FlipFace>(make_shared<XZRect>(213, 343, 227, 332, 554, light)));
     objects.add(make_shared<FlipFace>(make_shared<XZRect>(0, 555, 0, 555, 0, white)));
     objects.add(make_shared<XZRect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
@@ -74,7 +90,7 @@ int main()
 
     // Image
     const auto aspect_ratio = 1.0 / 1.0;
-    const int image_width = 500;
+    const int image_width = 1000;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 50;
