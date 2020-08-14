@@ -1,7 +1,7 @@
 #ifndef __AARECT__
 #define __AARECT__
 
-#include "hittable.h"
+#include "hittable.hpp"
 #include "aabb.hpp"
 
 class XYRect : public Hittable
@@ -75,6 +75,25 @@ public:
         rec.mat_ptr = mat_ptr;
         rec.p = r.at(t);
         return 1;
+    }
+
+    double pdf_value(const Point3 &origin, const Vec3 &v) const override
+    {
+        hit_record rec;
+        if (!hit(Ray(origin, v), eps, infinity, rec))
+            return 0;
+
+        auto area = (x1 - x0) * (z1 - z0);
+        auto distance_squared = rec.t * rec.t * v.length_sqr();
+        auto cosine = fabs(dot(v, rec.norm) / v.length());
+
+        return distance_squared / (cosine * area);
+    }
+
+    Vec3 random(const Point3 &origin) const override
+    {
+        auto random_point = Point3(random_double(x0, x1), k, random_double(z0, z1));
+        return random_point - origin;
     }
 
     bool bounding_box(double t0, double t1, AABB &output_box) const override

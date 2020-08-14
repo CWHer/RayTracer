@@ -2,7 +2,7 @@
 #define __HITTABLELIST__
 
 #include "raytracer.h"
-#include "hittable.h"
+#include "hittable.hpp"
 #include "aabb.hpp"
 
 #include <memory>

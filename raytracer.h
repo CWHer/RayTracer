@@ -69,6 +69,6 @@ inline double clamp(double x, double min, double max)
 #include "vec3.hpp"
 #include "color.hpp"
 #include "camera.hpp"
-#include "hittable.h"
+#include "hittable.hpp"
 
 #endif

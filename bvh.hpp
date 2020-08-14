@@ -2,7 +2,7 @@
 #define __BVH__
 
 #include "raytracer.h"
-#include "hittable.h"
+#include "hittable.hpp"
 #include "hittablelist.hpp"
 #include "aabb.hpp"
 #include "ray.hpp"

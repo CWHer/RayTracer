@@ -1,7 +1,7 @@
 #ifndef __CONSTANTMEDIUM__
 #define __CONSTANTMEDIUM__
 
-#include "hittable.h"
+#include "hittable.hpp"
 #include "raytracer.h"
 #include "material.hpp"
 

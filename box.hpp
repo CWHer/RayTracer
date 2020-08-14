@@ -2,7 +2,7 @@
 #define __BOX__
 
 #include "raytracer.h"
-#include "hittable.h"
+#include "hittable.hpp"
 #include "hittablelist.hpp"
 #include "aarect.hpp"
 

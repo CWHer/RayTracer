@@ -1,7 +1,7 @@
 #ifndef __SPHERE__
 #define __SPHERE__
 
-#include "hittable.h"
+#include "hittable.hpp"
 #include "vec3.hpp"
 #include "aabb.hpp"
 

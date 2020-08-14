@@ -27,6 +27,14 @@ class Hittable
 public:
     virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const = 0;
     virtual bool bounding_box(double t0, double t1, AABB &output_box) const = 0;
+    virtual double pdf_value(const Point3 &ori, const Vec3 &v) const
+    {
+        return 0;
+    }
+    virtual Vec3 random(const Vec3 &ori) const
+    {
+        return Vec3(1, 0, 0);
+    }
 };
 
 class FlipFace : public Hittable

@@ -2,7 +2,7 @@
 #define __MOVINGSPHERE__
 
 #include "raytracer.h"
-#include "hittable.h"
+#include "hittable.hpp"
 #include "material.hpp"
 #include "aabb.hpp"
 

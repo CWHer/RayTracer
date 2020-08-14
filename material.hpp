@@ -41,12 +41,10 @@ public:
     bool scatter(
         const Ray &r_in, const hit_record &rec, Color &alb, Ray &scattered, double &pdf) const override
     {
-        ONB uvw;
-        uvw.build_from_w(rec.norm);
-        auto direction = uvw.local(random_cosine_direction());
+        auto direction = random_in_hemisphere(rec.norm);
         scattered = Ray(rec.p, unit_vector(direction), r_in.time());
         alb = albedo->value(rec.u, rec.v, rec.p);
-        pdf = dot(rec.norm, scattered.direction()) / pi;
+        pdf = 0.5 / pi;
         return 1;
     }
     double scattering_pdf(
