@@ -7,6 +7,7 @@
 
 #include "raytracer.h"
 #include "texture.hpp"
+#include "onb.hpp"
 
 class Material
 {
@@ -40,10 +41,12 @@ public:
     bool scatter(
         const Ray &r_in, const hit_record &rec, Color &alb, Ray &scattered, double &pdf) const override
     {
-        auto direction = random_in_hemisphere(rec.norm);
+        ONB uvw;
+        uvw.build_from_w(rec.norm);
+        auto direction = uvw.local(random_cosine_direction());
         scattered = Ray(rec.p, unit_vector(direction), r_in.time());
         alb = albedo->value(rec.u, rec.v, rec.p);
-        pdf = 0.5 / pi;
+        pdf = dot(rec.norm, scattered.direction()) / pi;
         return 1;
     }
     double scattering_pdf(

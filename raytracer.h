@@ -17,10 +17,8 @@ using std::sqrt;
 // Constants
 
 const double infinity = std::numeric_limits<double>::infinity();
-// const double pi = 3.1415926535897932385;
 const double pi = acos(-1);
 const double eps = 1e-10;
-//used in hit tmin
 
 // Utility Functions
 

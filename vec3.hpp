@@ -164,6 +164,19 @@ inline Vec3 random_unit_vector()
     return Vec3(r * cos(a), r * sin(a), z);
 }
 
+inline Vec3 random_cosine_direction()
+{
+    auto r1 = random_double();
+    auto r2 = random_double();
+    auto z = sqrt(1 - r2);
+
+    auto theta = 2 * pi * r1;
+    auto x = cos(theta) * sqrt(r2);
+    auto y = sin(theta) * sqrt(r2);
+
+    return Vec3(x, y, z);
+}
+
 Vec3 reflect(const Vec3 &v, const Vec3 &n)
 {
     return v - 2 * dot(v, n) * n;
