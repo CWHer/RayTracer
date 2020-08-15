@@ -60,6 +60,23 @@ public:
         }
         return 1;
     }
+
+    double pdf_value(const Point3 &ori, const Vec3 &v) const override
+    {
+        auto weight = 1.0 / objects.size();
+        double sum = 0;
+
+        for (const auto &object : objects)
+            sum += weight * object->pdf_value(ori, v);
+
+        return sum;
+    }
+
+    Vec3 random(const Vec3 &ori) const override
+    {
+        auto int_size = static_cast<int>(objects.size());
+        return objects[random_int(0, int_size - 1)]->random(ori);
+    }
 };
 
 #endif

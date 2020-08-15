@@ -15,7 +15,7 @@
 
 Color ray_color(
     const Ray &r, const Color &background,
-    const Hittable &world, int depth)
+    const Hittable &world, shared_ptr<Hittable> lights, int depth)
 {
     hit_record rec;
     // If we've exceeded the ray bounce limit, no more light is gathered.
@@ -25,26 +25,25 @@ Color ray_color(
     if (!world.hit(r, eps, infinity, rec))
         return background;
 
-    Ray scattered;
-    Color attenutaion;
+    scatter_record srec;
     Color emitted = rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
-    double pdf_val;
-    Color albedo;
 
-    if (!rec.mat_ptr->scatter(r, rec, albedo, scattered, pdf_val))
+    if (!rec.mat_ptr->scatter(r, rec, srec))
         return emitted;
+    if (srec.is_specular)
+        return srec.attenuation *
+               ray_color(srec.specular_ray, background, world, lights, depth - 1);
 
-    shared_ptr<Hittable> light_shape =
-        make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
-    auto p0 = make_shared<HittablePDF>(light_shape, rec.p);
-    auto p1 = make_shared<CosinePDF>(rec.norm);
-    MixturePDF p(p0, p1);
-    scattered = Ray(rec.p, p.generate(), r.time());
-    pdf_val = p.value(scattered.direction());
+    // shared_ptr<Hittable> light_shape =
+    //     make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
+    auto light_ptr = make_shared<HittablePDF>(lights, rec.p);
+    MixturePDF p(light_ptr, srec.pdf_ptr);
+    Ray scattered = Ray(rec.p, p.generate(), r.time());
+    auto pdf_val = p.value(scattered.direction());
 
     return emitted +
-           albedo * rec.mat_ptr->scattering_pdf(r, rec, scattered) *
-               ray_color(scattered, background, world, depth - 1) / pdf_val;
+           srec.attenuation * rec.mat_ptr->scattering_pdf(r, rec, scattered) *
+               ray_color(scattered, background, world, lights, depth - 1) / pdf_val;
 }
 
 HittableList cornell_box()
@@ -63,7 +62,8 @@ HittableList cornell_box()
     objects.add(make_shared<XZRect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
 
-    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    shared_ptr<Material> aluminum = make_shared<Metal>(Color(0.8, 0.85, 0.88), 0.0);
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), aluminum);
     box1 = make_shared<RotateY>(box1, 15);
     box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
     objects.add(box1);
@@ -73,10 +73,7 @@ HittableList cornell_box()
     box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
     objects.add(box2);
 
-    HittableList world;
-    world.add(make_shared<BVHnode>(objects, 0, 1));
-
-    return world;
+    return objects;
 }
 
 int main()
@@ -91,9 +88,8 @@ int main()
     const int max_depth = 50;
 
     // World
-    auto lights = make_shared<HittableList>();
-    lights->add(make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>()));
-    lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, shared_ptr<Material>()));
+    shared_ptr<Hittable> lights = make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
+    // lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, shared_ptr<Material>()));
 
     HittableList world = cornell_box();
 
@@ -127,7 +123,7 @@ int main()
                 auto v = (j + random_double()) / (image_height - 1);
                 Ray r = cam.get_ray(u, v);
 
-                pixel_color += ray_color(r, background, world, max_depth);
+                pixel_color += ray_color(r, background, world, lights, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }

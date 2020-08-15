@@ -4,6 +4,8 @@
 #include "hittable.hpp"
 #include "vec3.hpp"
 #include "aabb.hpp"
+#include "onb.hpp"
+#include "pdf.hpp"
 
 class Sphere : public Hittable
 {
@@ -75,6 +77,27 @@ public:
             center - Vec3(radius, radius, radius),
             center + Vec3(radius, radius, radius));
         return 1;
+    }
+
+    double pdf_value(const Point3 &ori, const Vec3 &v) const override
+    {
+        hit_record rec;
+        if (!hit(Ray(ori, v), eps, infinity, rec))
+            return 0;
+
+        auto cos_phi_max = sqrt(1 - radius * radius / (center - ori).length_sqr());
+        auto solid_angle = 2 * pi * (1 - cos_phi_max);
+
+        return 1 / solid_angle;
+    }
+
+    Vec3 random(const Point3 &ori) const override
+    {
+        Vec3 direction = center - ori;
+        auto distance_squared = direction.length_sqr();
+        ONB uvw;
+        uvw.build_from_w(direction);
+        return uvw.local(random_to_sphere(radius, distance_squared));
     }
 };
 
