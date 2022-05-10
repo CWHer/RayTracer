@@ -1,15 +1,15 @@
 // A blue-to-white gradient depending on ray Y coordinate
 // Also, Rendering a red sphere
 
-#include "ray.hpp"
-#include "color.hpp"
+#include "../ray.hpp"
+#include "../color.hpp"
 
 #include <iostream>
 
 const double eps = 1e-8;
 
 bool hit_sphere(const Point3 &center, double radius, const Ray &r)
-{ //not a 2D circle, so discriminat is needed
+{ // not a 2D circle, so discriminat is needed
     Vec3 oc = r.origin() - center;
     auto a = dot(r.direction(), r.direction());
     auto b = 2.0 * dot(oc, r.direction());
@@ -23,8 +23,8 @@ Color ray_color(const Ray &r)
     if (hit_sphere(Point3(0, 0, -1), 0.5, r))
         return Color(1, 0, 0);
     Vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5 * (unit_direction.y() + 1.0);                          //t can not reach 1, maxinum of y is ~0.44
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); //blend
+    auto t = 0.5 * (unit_direction.y() + 1.0);                          // t can not reach 1, maxinum of y is ~0.44
+    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); // blend
 }
 
 int main()
@@ -53,7 +53,7 @@ int main()
         {
             auto u = double(i) / (image_width - 1);
             auto v = double(j) / (image_height - 1);
-            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); //the length of r.dir varies, so there is horizontal gradient too.
+            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); // the length of r.dir varies, so there is horizontal gradient too.
             Color pixel_color = ray_color(r);
             write_color(std::cout, pixel_color, 1);
         }

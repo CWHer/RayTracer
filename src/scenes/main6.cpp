@@ -1,9 +1,8 @@
-#include "raytracer.h"
-
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
+#include "../raytracer.h"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
@@ -11,7 +10,7 @@ Color ray_color(const Ray &r, const Hittable &world, int depth)
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (world.hit(r, eps, infinity, rec))
     {
         Ray scattered;
@@ -39,21 +38,15 @@ int main()
     HittableList world;
     // world.add(make_shared<Sphere>(
     //     Point3(0, 0, -1), 0.5, make_shared<Lambertian>(Color(0.7, 0.3, 0.3))));
-    world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, make_shared<Dielectric>(1.5)));
-    //use a negative radius, the geometry is unaffected, but the surface normal points inward.
-    //This can be used as a bubble to make a hollow glass sphere
-    world.add(make_shared<Sphere>(Point3(0, 0, -1), -0.35, make_shared<Dielectric>(1.5)));
-    // world.add(make_shared<Sphere>(
-    //     Point3(0, 0, -1), 0.5, make_shared<Dielectric>(2.3)));
+    world.add(make_shared<Sphere>(
+        Point3(0, 0, -1), 0.5, make_shared<Lambertian>(Color(0.945, 0.498, 0.07) * 1.4)));
 
     world.add(make_shared<Sphere>(
         Point3(0, -100.5, -1), 100, make_shared<Lambertian>(Color(0.8, 0.8, 0.0))));
 
     world.add(make_shared<Sphere>(Point3(1, 0, -1), 0.5, make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.3)));
     // world.add(make_shared<Sphere>(Point3(-1, 0, -1), 0.5, make_shared<Metal>(Color(0.8, 0.8, 0.8))));
-    // world.add(make_shared<Sphere>(Point3(-1, -0.25, -1), 0.25, make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.7)));
-    world.add(make_shared<Sphere>(
-        Point3(-1, 0, -1), 0.5, make_shared<Lambertian>(Color(0.1, 0.2, 0.5))));
+    world.add(make_shared<Sphere>(Point3(-1, -0.25, -1), 0.25, make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.7)));
 
     Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio, 0, 1);
 

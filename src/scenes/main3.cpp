@@ -1,7 +1,7 @@
 // Rendering surface normals on a sphere
 
-#include "ray.hpp"
-#include "color.hpp"
+#include "../ray.hpp"
+#include "../color.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -9,7 +9,7 @@
 const double eps = 1e-8;
 
 double hit_sphere(const Point3 &center, double radius, const Ray &r)
-{ //not a 2D circle, so discriminat is needed
+{ // not a 2D circle, so discriminat is needed
     Vec3 oc = r.origin() - center;
     auto a = dot(r.direction(), r.direction());
     auto half_b = dot(oc, r.direction());
@@ -19,7 +19,7 @@ double hit_sphere(const Point3 &center, double radius, const Ray &r)
     if (discriminant < eps)
         return -1;
     else
-        return (-half_b - std::sqrt(discriminant)) / a; //in this case, '-' should satisfy
+        return (-half_b - std::sqrt(discriminant)) / a; // in this case, '-' should satisfy
 }
 
 Color ray_color(const Ray &r)
@@ -29,11 +29,11 @@ Color ray_color(const Ray &r)
     {
         Vec3 norm = unit_vector(r.at(t) - Vec3(0, 0, -1));
         return 0.5 * Color(norm.x() + 1, norm.y() + 1, norm.z() + 1);
-        //x in [-1,1], x+1 in [0,2], 0.5*(x+1) in [0,1]
+        // x in [-1,1], x+1 in [0,2], 0.5*(x+1) in [0,1]
     }
     Vec3 unit_direction = unit_vector(r.direction());
-    t = 0.5 * (unit_direction.y() + 1.0);                               //t can not reach 1, maxinum of y is ~0.44
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); //blend
+    t = 0.5 * (unit_direction.y() + 1.0);                               // t can not reach 1, maxinum of y is ~0.44
+    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); // blend
 }
 
 int main()
@@ -62,7 +62,7 @@ int main()
         {
             auto u = double(i) / (image_width - 1);
             auto v = double(j) / (image_height - 1);
-            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); //the length of r.dir varies, so there is horizontal gradient too.
+            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin); // the length of r.dir varies, so there is horizontal gradient too.
             Color pixel_color = ray_color(r);
             write_color(std::cout, pixel_color, 1);
         }

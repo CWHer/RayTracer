@@ -126,7 +126,7 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 
 #### 1.First PPM image
 
-![](img/p0.png)
+![](assets/p0.png)
 
 > - notice
 >
@@ -135,7 +135,7 @@ weak_ptr 支持拷贝或赋值, 但不会影响对应的 shared_ptr 内部对象
 
 #### 2.A blue-to-white gradient depending on ray Y coordinate
 
-![](img/p1.png)
+![](assets/p1.png)
 
 ​	Also, Rendering a red sphere
 
@@ -162,7 +162,7 @@ $$
 
 #### 5.Front Faces Versus Back Faces&A List of Hittable Objects
 
-![](img/p2.png)
+![](assets/p2.png)
 
 > If the ray and the normal face in the same direction, the ray is inside the object. 
 >
@@ -172,13 +172,13 @@ $$
 
 > When a real camera takes a picture, there are usually no jaggies along edges because the edge pixels are a blend of some foreground and some background. We can get the same effect by averaging a bunch of samples inside each pixel.
 
-![](img/p3.png)
+![](assets/p3.png)
 
 #### 7.Diffuse Materials(漫反射)
 
 > Light that reflects off a diffuse surface has its direction randomized.
 
-![](img/p4.png)
+![](assets/p4.png)
 
 > - A simple algorithm
 >
@@ -186,7 +186,7 @@ $$
 >
 > Pick a random point $\mathbf{S}$ inside this unit radius sphere and send a ray from the hit point  $\mathbf{P}$ to the random point  $\mathbf{S}$
 
-![](img/p5.png)
+![](assets/p5.png)
 
 > - notice
 >
@@ -216,11 +216,11 @@ $$
 $$
 
 
-![](img/p6.png)
+![](assets/p6.png)
 
 Fuzzy Reflection
 
-![](img/p7.png)
+![](assets/p7.png)
 
 > The catch is that for big spheres or grazing rays, we may scatter below the surface. We can just have the surface absorb those.
 
@@ -228,7 +228,7 @@ Fuzzy Reflection
 
 > When a light ray hits them, it splits into a reflected ray and a refracted (transmitted) ray. We’ll handle that by randomly choosing between reflection or refraction, and only generating one scattered ray per interaction.
 
-![](img/p8.png)
+![](assets/p8.png)
 $$
 \sin\theta' = \frac{\eta}{\eta'} \cdot \sin\theta
 $$
@@ -251,13 +251,13 @@ $$
 >
 >   When calculate hit() in Sphere class, $r^{2}$ is used in fomulations. So negetive radius functions well. Whereas when calculating the outward normal, negative radius results in a negative outward normal, which is actually inward normal.
 
-![](img/image0.jpg)
+![](assets/image0.jpg)
 
 #### 10.Positionable Camera
 
-![](img/p9.png)
+![](assets/p9.png)
 
-![](img/p10.png)
+![](assets/p10.png)
 
 > And keep in mind that we can — but we don’t have to — use world up (0,1,0) to specify vup.
 >
@@ -267,4 +267,4 @@ $$
 
 #### 11.Defocus Blur
 
-![](img/p11.png)
+![](assets/p11.png)

@@ -128,7 +128,7 @@ inline Vec3 unit_vector(Vec3 v)
 // rand functions
 inline Vec3 random_in_unit_sphere()
 {
-    //old version
+    // old version
     Vec3 p;
     do
     {
@@ -148,7 +148,7 @@ inline Vec3 random_in_unit_disk()
 }
 
 inline Vec3 random_in_hemisphere(const Vec3 &normal)
-{ //a uniform scatter direction for all angles
+{ // a uniform scatter direction for all angles
     Vec3 in_unit_sphere = random_in_unit_sphere();
     if (dot(in_unit_sphere, normal) > 0) // In the same hemisphere as the normal
         return in_unit_sphere;
@@ -157,7 +157,7 @@ inline Vec3 random_in_hemisphere(const Vec3 &normal)
 }
 
 inline Vec3 random_unit_vector()
-{ //on the surface of a unit sphere
+{ // on the surface of a unit sphere
     auto a = random_double(0, 2 * pi);
     auto z = random_double(-1, 1);
     auto r = sqrt(1 - z * z);
@@ -170,7 +170,7 @@ Vec3 reflect(const Vec3 &v, const Vec3 &n)
 }
 
 Vec3 refract(const Vec3 &uv, const Vec3 &n, double etai_over_etat)
-{ //uv should be unit vector
+{ // uv should be unit vector
     auto cos_theta = dot(-uv, n);
     Vec3 r_out_parallel = etai_over_etat * (uv + cos_theta * n);
     Vec3 r_out_perp = -sqrt(1.0 - r_out_parallel.length_sqr()) * n;

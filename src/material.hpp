@@ -17,7 +17,7 @@ public:
 class Lambertian : public Material
 {
 private:
-    Color albedo; //similar to reflectance
+    Color albedo; // similar to reflectance
 public:
     Lambertian(const Color &_a) : albedo(_a) {}
 
@@ -58,7 +58,7 @@ class Dielectric : public Material
 private:
     double ref_idx;
 
-    //Schlick Approximation
+    // Schlick Approximation
     double schlick(double cosine, double ref_idx) const
     {
         auto r0 = (1 - ref_idx) / (1 + ref_idx);
@@ -71,7 +71,7 @@ public:
 
     bool scatter(
         const Ray &r_in, const hit_record &rec, Color &attenuation, Ray &scattered) const override
-    { //Attenuation is always 1 — the glass surface absorbs nothing
+    { // Attenuation is always 1 — the glass surface absorbs nothing
         attenuation = Color(1, 1, 1);
         double etai_over_etat;
         if (rec.front_face)
@@ -82,7 +82,7 @@ public:
         Vec3 unit_direction = unit_vector(r_in.direction());
         double cos_theta = fmin(dot(-unit_direction, rec.norm), 1.0);
         double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-        //total internal reflection
+        // total internal reflection
         if (etai_over_etat * sin_theta > 1.0)
         {
             // Must Reflect

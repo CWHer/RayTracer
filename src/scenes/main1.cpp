@@ -1,7 +1,7 @@
 // First PPM image
 
-#include "color.hpp"
-#include "vec3.hpp"
+#include "../color.hpp"
+#include "../vec3.hpp"
 
 #include <iostream>
 

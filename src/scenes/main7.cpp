@@ -1,9 +1,8 @@
-#include "raytracer.h"
-
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
+#include "../raytracer.h"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
 
 Color ray_color(const Ray &r, const Hittable &world, int depth)
 {
@@ -11,7 +10,7 @@ Color ray_color(const Ray &r, const Hittable &world, int depth)
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (world.hit(r, eps, infinity, rec))
     {
         Ray scattered;
@@ -40,8 +39,8 @@ int main()
     // world.add(make_shared<Sphere>(
     //     Point3(0, 0, -1), 0.5, make_shared<Lambertian>(Color(0.7, 0.3, 0.3))));
     world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, make_shared<Dielectric>(1.5)));
-    //use a negative radius, the geometry is unaffected, but the surface normal points inward.
-    //This can be used as a bubble to make a hollow glass sphere
+    // use a negative radius, the geometry is unaffected, but the surface normal points inward.
+    // This can be used as a bubble to make a hollow glass sphere
     world.add(make_shared<Sphere>(Point3(0, 0, -1), -0.35, make_shared<Dielectric>(1.5)));
     // world.add(make_shared<Sphere>(
     //     Point3(0, 0, -1), 0.5, make_shared<Dielectric>(2.3)));
@@ -55,10 +54,7 @@ int main()
     world.add(make_shared<Sphere>(
         Point3(-1, 0, -1), 0.5, make_shared<Lambertian>(Color(0.1, 0.2, 0.5))));
 
-    // Camera cam(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio);
-    Point3 lookfrom(-2, 2, 1);
-    Point3 lookat(0, 0, -1);
-    Camera cam(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 20, aspect_ratio, 0, (lookfrom - lookat).length());
+    Camera cam(Point3(0, 0, 0), Point3(0, 0, -1), Vec3(0, 1, 0), 90, aspect_ratio, 0, 1);
 
     for (int j = image_height - 1; j >= 0; --j)
     {
