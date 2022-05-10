@@ -4,6 +4,8 @@ code for [RayTracingTheRestofYourLife](https://github.com/RayTracing/raytracing.
 
 [TOC]
 
+![](./assets/image.png)
+
 #### 主要模块
 
 | name           |                             | members                                     |
