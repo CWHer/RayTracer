@@ -1,15 +1,15 @@
-#include "raytracer.h"
+#include "../raytracer.h"
 
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
-#include "movingsphere.hpp"
-#include "texture.hpp"
-#include "aarect.hpp"
-#include "box.hpp"
-#include "bvh.hpp"
-#include "pdf.hpp"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
+#include "../moving_sphere.hpp"
+#include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../bvh.hpp"
+#include "../pdf.hpp"
 
 #include <ctime>
 
@@ -21,7 +21,7 @@ Color ray_color(
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (!world.hit(r, eps, infinity, rec))
         return background;
 
@@ -62,16 +62,13 @@ HittableList cornell_box()
     objects.add(make_shared<XZRect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
 
-    shared_ptr<Material> aluminum = make_shared<Metal>(Color(0.8, 0.85, 0.88), 0.0);
-    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), aluminum);
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
     box1 = make_shared<RotateY>(box1, 15);
     box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
     objects.add(box1);
 
-    shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
-    box2 = make_shared<RotateY>(box2, -18);
-    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
-    objects.add(box2);
+    auto glass = make_shared<Dielectric>(1.5);
+    objects.add(make_shared<Sphere>(Point3(190, 90, 190), 90, glass));
 
     return objects;
 }
@@ -88,8 +85,9 @@ int main()
     const int max_depth = 50;
 
     // World
-    shared_ptr<Hittable> lights = make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
-    // lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, shared_ptr<Material>()));
+    auto lights = make_shared<HittableList>();
+    lights->add(make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>()));
+    lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, nullptr));
 
     HittableList world = cornell_box();
 

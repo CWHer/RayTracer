@@ -11,8 +11,8 @@ struct hit_record
     Vec3 norm;
     // mat_ptr will be set to point at the material pointer the sphere was given when it was set up in main().
     shared_ptr<Material> mat_ptr;
-    double t;    //Ray
-    double u, v; //surface coordinates
+    double t;    // Ray
+    double u, v; // surface coordinates
     bool front_face;
 
     inline void set_face_normal(const Ray &r, const Vec3 &outward_normal)

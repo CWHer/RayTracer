@@ -3,7 +3,7 @@
 
 #include "raytracer.h"
 #include "hittable.hpp"
-#include "hittablelist.hpp"
+#include "hittable_list.hpp"
 #include "aarect.hpp"
 
 class Box : public Hittable

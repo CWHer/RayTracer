@@ -40,3 +40,21 @@ code for [RayTracingTheRestofYourLife](https://github.com/RayTracing/raytracing.
 #### 3.MC Integration on the Sphere of Directions
 
 蒙特卡洛积分 - chopper的文章 - 知乎 https://zhuanlan.zhihu.com/p/146144853
+
+#### 4.MC Integration on the Sphere of Directions
+
+#### 5.Light Scattering
+
+#### 6.Importance Sampling Materials
+
+#### 7.Generating Random Directions
+
+#### 8.Orthonormal Bases
+
+#### 9.Sampling Lights Directly
+
+#### 10.Mixture Densities
+
+#### 11.Some Architectural Decisions
+
+#### 12.Cleaning Up PDF Management

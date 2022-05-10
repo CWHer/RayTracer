@@ -92,7 +92,7 @@ class Dielectric : public Material
 private:
     double ref_idx;
 
-    //Schlick Approximation
+    // Schlick Approximation
     double schlick(double cosine, double ref_idx) const
     {
         auto r0 = (1 - ref_idx) / (1 + ref_idx);
@@ -105,7 +105,7 @@ public:
 
     bool scatter(
         const Ray &r_in, const hit_record &rec, scatter_record &srec) const override
-    { //Attenuation is always 1 — the glass surface absorbs nothing
+    { // Attenuation is always 1 — the glass surface absorbs nothing
         srec.is_specular = 1, srec.pdf_ptr = nullptr;
         srec.attenuation = Color(1, 1, 1);
         double etai_over_etat = (rec.front_face) ? (1.0 / ref_idx) : ref_idx;
@@ -113,8 +113,8 @@ public:
         Vec3 unit_direction = unit_vector(r_in.direction());
         double cos_theta = fmin(dot(-unit_direction, rec.norm), 1.0);
         double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-        //total internal reflection
-        // Must Reflect >1.0
+        // total internal reflection
+        //  Must Reflect >1.0
         if ((etai_over_etat * sin_theta > 1.0) ||
             (random_double() < schlick(cos_theta, etai_over_etat)))
         {

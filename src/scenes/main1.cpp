@@ -1,15 +1,14 @@
-#include "raytracer.h"
+#include "../raytracer.h"
 
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
-#include "movingsphere.hpp"
-#include "texture.hpp"
-#include "aarect.hpp"
-#include "box.hpp"
-#include "bvh.hpp"
-#include "pdf.hpp"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
+#include "../moving_sphere.hpp"
+#include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../bvh.hpp"
 
 #include <ctime>
 
@@ -21,7 +20,7 @@ Color ray_color(
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (!world.hit(r, eps, infinity, rec))
         return background;
 
@@ -30,12 +29,7 @@ Color ray_color(
 
     if (!rec.mat_ptr->scatter(r, rec, srec))
         return emitted;
-    if (srec.is_specular)
-        return srec.attenuation *
-               ray_color(srec.specular_ray, background, world, lights, depth - 1);
 
-    // shared_ptr<Hittable> light_shape =
-    //     make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
     auto light_ptr = make_shared<HittablePDF>(lights, rec.p);
     MixturePDF p(light_ptr, srec.pdf_ptr);
     Ray scattered = Ray(rec.p, p.generate(), r.time());
@@ -67,8 +61,10 @@ HittableList cornell_box()
     box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
     objects.add(box1);
 
-    auto glass = make_shared<Dielectric>(1.5);
-    objects.add(make_shared<Sphere>(Point3(190, 90, 190), 90, glass));
+    shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
+    box2 = make_shared<RotateY>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
+    objects.add(box2);
 
     return objects;
 }
@@ -79,16 +75,13 @@ int main()
 
     // Image
     const auto aspect_ratio = 1.0 / 1.0;
-    const int image_width = 400;
+    const int image_width = 500;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 1000;
+    const int samples_per_pixel = 100;
     const int max_depth = 50;
 
     // World
-    auto lights = make_shared<HittableList>();
-    lights->add(make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>()));
-    lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, nullptr));
-
+    shared_ptr<Hittable> lights = make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
     HittableList world = cornell_box();
 
     const Color background(0, 0, 0);

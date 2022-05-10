@@ -3,7 +3,7 @@
 
 #include "raytracer.h"
 #include "hittable.hpp"
-#include "hittablelist.hpp"
+#include "hittable_list.hpp"
 #include "aabb.hpp"
 #include "ray.hpp"
 
@@ -33,7 +33,7 @@ public:
 
         bool hit_left = left->hit(r, tmin, tmax, rec);
         bool hit_right = right->hit(r, tmin, hit_left ? rec.t : tmax, rec);
-        //hit the closet obj
+        // hit the closet obj
 
         return hit_left | hit_right;
     }
@@ -73,11 +73,12 @@ bool box_z_cmp(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b)
 // 2. sort the primitives (using std::sort)
 // 3. put half in each subtree
 BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
-                    size_t start, size_t end, double time0, double time1)
+                 size_t start, size_t end, double time0, double time1)
 {
     int axis = random_int(0, 2);
-    auto cmp = axis == 0 ? box_x_cmp
-                         : axis == 1 ? box_y_cmp : box_z_cmp;
+    auto cmp = axis == 0   ? box_x_cmp
+               : axis == 1 ? box_y_cmp
+                           : box_z_cmp;
     size_t object_span = end - start;
 
     if (object_span == 1)
@@ -93,7 +94,7 @@ BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
     }
     else
     {
-        //not include end
+        // not include end
         std::sort(objects.begin() + start, objects.begin() + end, cmp);
 
         auto mid = start + object_span / 2;
@@ -103,7 +104,7 @@ BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
 
     AABB box_left, box_right;
 
-    //in case you sent in something like an infinite plane
+    // in case you sent in something like an infinite plane
     if (!left->bounding_box(time0, time1, box_left) ||
         !right->bounding_box(time0, time1, box_right))
         std::cerr << "No bounding box in BVHnode constructor.\n";

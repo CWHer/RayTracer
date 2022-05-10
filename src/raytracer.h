@@ -45,7 +45,7 @@ inline double random_double()
 {
     // Returns a random real in [0,1).
     static std::random_device rd;
-    static std::mt19937 generator(rd()); //Mersenne Twister 19937 generator
+    static std::mt19937 generator(rd()); // Mersenne Twister 19937 generator
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(generator);
 }

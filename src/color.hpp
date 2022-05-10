@@ -4,7 +4,7 @@
 #include "raytracer.h"
 
 void write_color(std::ostream &out, Color pixel_color, int samples_per_pixel)
-{ //multi-sampled color computation
+{ // multi-sampled color computation
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();

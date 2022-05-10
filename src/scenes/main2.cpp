@@ -1,14 +1,15 @@
-#include "raytracer.h"
+#include "../raytracer.h"
 
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
-#include "movingsphere.hpp"
-#include "texture.hpp"
-#include "aarect.hpp"
-#include "box.hpp"
-#include "bvh.hpp"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
+#include "../moving_sphere.hpp"
+#include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../bvh.hpp"
+#include "../pdf.hpp"
 
 #include <ctime>
 
@@ -29,7 +30,12 @@ Color ray_color(
 
     if (!rec.mat_ptr->scatter(r, rec, srec))
         return emitted;
+    if (srec.is_specular)
+        return srec.attenuation *
+               ray_color(srec.specular_ray, background, world, lights, depth - 1);
 
+    // shared_ptr<Hittable> light_shape =
+    //     make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
     auto light_ptr = make_shared<HittablePDF>(lights, rec.p);
     MixturePDF p(light_ptr, srec.pdf_ptr);
     Ray scattered = Ray(rec.p, p.generate(), r.time());
@@ -56,7 +62,8 @@ HittableList cornell_box()
     objects.add(make_shared<XZRect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
 
-    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    shared_ptr<Material> aluminum = make_shared<Metal>(Color(0.8, 0.85, 0.88), 0.0);
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), aluminum);
     box1 = make_shared<RotateY>(box1, 15);
     box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
     objects.add(box1);
@@ -75,13 +82,15 @@ int main()
 
     // Image
     const auto aspect_ratio = 1.0 / 1.0;
-    const int image_width = 500;
+    const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 100;
+    const int samples_per_pixel = 1000;
     const int max_depth = 50;
 
     // World
     shared_ptr<Hittable> lights = make_shared<XZRect>(213, 343, 227, 332, 554, shared_ptr<Material>());
+    // lights->add(make_shared<Sphere>(Point3(190, 90, 190), 90, shared_ptr<Material>()));
+
     HittableList world = cornell_box();
 
     const Color background(0, 0, 0);
