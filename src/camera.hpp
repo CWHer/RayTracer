@@ -13,7 +13,7 @@ private:
     Vec3 vertical;
     Vec3 u, v, w;
     double lens_radius;
-    double time0, time1; //open/close times
+    double time0, time1; // open/close times
 
 public:
     Camera(
@@ -46,7 +46,7 @@ public:
     }
 
     Ray get_ray(double s, double t) const
-    { //origin->(u,v)
+    { // origin->(u,v)
         Vec3 rd = lens_radius * random_in_unit_disk();
         Vec3 offset = u * rd.x() + v * rd.y();
         return Ray(

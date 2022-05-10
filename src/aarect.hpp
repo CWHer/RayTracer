@@ -25,8 +25,8 @@ public:
         auto y = r.origin().y() + t * r.direction().y();
         if (x < x0 || x > x1 || y < y0 || y > y1)
             return 0;
-        rec.u = (x - x0) / (x1 - x0); //from left
-        rec.v = (y1 - y) / (y1 - y0); //from up
+        rec.u = (x - x0) / (x1 - x0); // from left
+        rec.v = (y1 - y) / (y1 - y0); // from up
         rec.t = t;
         auto outward_normal = Vec3(0, 0, 1);
         rec.set_face_normal(r, outward_normal);

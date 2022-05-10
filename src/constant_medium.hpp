@@ -1,5 +1,5 @@
-#ifndef __CONSTANTMEDIUM__
-#define __CONSTANTMEDIUM__
+#ifndef __CONSTANT_MEDIUM__
+#define __CONSTANT_MEDIUM__
 
 #include "hittable.h"
 #include "raytracer.h"

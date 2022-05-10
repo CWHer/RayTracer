@@ -1,5 +1,5 @@
-//not what you think....
-//Axis-Aligned Bounding Boxes
+// not what you think....
+// Axis-Aligned Bounding Boxes
 
 #ifndef __AABB__
 #define __AABB__

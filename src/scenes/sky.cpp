@@ -1,17 +1,20 @@
-#include "raytracer.h"
+#include "../raytracer.h"
 
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
-#include "movingsphere.hpp"
-#include "texture.hpp"
-#include "bvh.hpp"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
+#include "../moving_sphere.hpp"
+#include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../constant_medium.hpp"
+#include "../bvh.hpp"
 #include <ctime>
 
 void write_ori(std::ostream &out, Color pixel_color, int samples_per_pixel)
 {
-    //multi-sampled color computation
+    // multi-sampled color computation
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
@@ -39,7 +42,7 @@ inline double random_double_seed()
 {
     // Returns a random real in [0,1).
     static std::random_device rd;
-    static std::mt19937 generator(20000905 << 2); //Mersenne Twister 19937 generator
+    static std::mt19937 generator(20000905 << 2); // Mersenne Twister 19937 generator
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(generator);
 }
@@ -66,7 +69,7 @@ Color ray_color(const Ray &r, const Hittable &world, int depth)
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (!world.hit(r, eps, infinity, rec))
     {
         Vec3 unit_direction = unit_vector(r.direction());

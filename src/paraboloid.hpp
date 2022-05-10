@@ -48,8 +48,8 @@ public:
                 {
                     rec.t = temp;
                     rec.p = pos;
-                    rec.u = (pos.x() - x0) / (x1 - x0); //from left
-                    rec.v = (z1 - pos.z()) / (z1 - z0); //from up
+                    rec.u = (pos.x() - x0) / (x1 - x0); // from left
+                    rec.v = (z1 - pos.z()) / (z1 - z0); // from up
                     rec.mat_ptr = mat_ptr;
                     auto outward_norm = Vec3(-2 * pos.x() / sqr(b), 1, 2 * pos.z() / sqr(a));
                     outward_norm = unit_vector(outward_norm);
@@ -66,8 +66,8 @@ public:
                 {
                     rec.t = temp;
                     rec.p = pos;
-                    rec.u = (pos.x() - x0) / (x1 - x0); //from left
-                    rec.v = (z1 - pos.z()) / (z1 - z0); //from up
+                    rec.u = (pos.x() - x0) / (x1 - x0); // from left
+                    rec.v = (z1 - pos.z()) / (z1 - z0); // from up
                     rec.mat_ptr = mat_ptr;
                     auto outward_norm = Vec3(-2 * pos.x() / sqr(b), 1, 2 * pos.z() / sqr(a));
                     outward_norm = unit_vector(outward_norm);

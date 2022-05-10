@@ -12,18 +12,18 @@ private:
     double radius;
     shared_ptr<Material> mat_ptr;
 
-    //u:phi v:theta
+    // u:phi v:theta
     void get_sphere_uv(const Vec3 &p, double &u, double &v) const
     {
-        //z=cos(phi)
-        //x=sin(phi)cos(theta)
-        //y=sin(phi)sin(theta)
-        //u=phi/(2pi) v=theta/pi
-        //the coordinates of this image is different from origin
-        //orgin->this x->z y->x z->y
+        // z=cos(phi)
+        // x=sin(phi)cos(theta)
+        // y=sin(phi)sin(theta)
+        // u=phi/(2pi) v=theta/pi
+        // the coordinates of this image is different from origin
+        // orgin->this x->z y->x z->y
         auto theta = atan2(p.x(), p.z());
         auto phi = acos(p.y());
-        u = (theta + pi) / (2 * pi); //notice:-90->0
+        u = (theta + pi) / (2 * pi); // notice:-90->0
         v = phi / pi;
     }
 
@@ -43,7 +43,7 @@ public:
         if (discriminant > 0)
         {
             auto root = sqrt(discriminant);
-            auto temp = (-half_b - root) / a; //negative root
+            auto temp = (-half_b - root) / a; // negative root
             if (temp < tmax && temp > tmin)
             {
                 rec.t = temp;
@@ -54,7 +54,7 @@ public:
                 rec.mat_ptr = mat_ptr;
                 return 1;
             }
-            temp = (-half_b + root) / a; //positive root
+            temp = (-half_b + root) / a; // positive root
             if (temp < tmax && temp > tmin)
             {
                 rec.t = temp;

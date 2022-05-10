@@ -1,18 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include "raytracer.h"
+#include "./raytracer.h"
 using namespace std;
+
 const char *filename[] = {
-    "image1.ppm", "image2.ppm"
- "image3.ppm", "image4.ppm",
- "image5.ppm", "image6.ppm"};
+    "image1.ppm", "image2.ppm",
+    "image3.ppm", "image4.ppm",
+    "image5.ppm", "image6.ppm"};
 // "image7.ppm", "image8.ppm",
 // "image9.ppm", "image10.ppm"};
 constexpr auto aspect_ratio = 1.0;
 const int image_width = 3000;
 constexpr int image_height = static_cast<int>(image_width / aspect_ratio);
 Color w[image_height][image_width];
+
 int main()
 {
     ios::sync_with_stdio(0);

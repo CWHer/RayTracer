@@ -53,7 +53,7 @@ class NoiseTexture : public Texture
 {
 private:
     Perlin noise;
-    double scale; //larger scale means more frequent
+    double scale; // larger scale means more frequent
 
 public:
     NoiseTexture() : scale(1) {}
@@ -65,7 +65,7 @@ public:
     // }
 
     Color value(double u, double v, const Point3 &p) const override
-    { //marble-like effect
+    { // marble-like effect
         return Color(1, 1, 1) * 0.5 * (1 + sin(scale * p.z() + 10 * noise.turb(p)));
     }
 };
@@ -123,7 +123,7 @@ public:
             j = height - 1;
 
         const auto color_scale = 1.0 / 255.0;
-        auto pixel = data + j * bytes_per_scanline + i * bytes_per_pixel; //left_upper_corner
+        auto pixel = data + j * bytes_per_scanline + i * bytes_per_pixel; // left_upper_corner
 
         return Color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
     }

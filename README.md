@@ -45,7 +45,7 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >
 > A key thing is we are dividing objects into subsets. We are not dividing the screen or the volume. Any object is in just one bounding volume, but bounding volumes can overlap.
 
-![](img/p1.png)
+![](assets/p1.png)
 
 > - Axis-Aligned Bounding Boxes
 >
@@ -55,9 +55,9 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >
 > NaN should be take care of.
 
-![](img/p2.png)
+![](assets/p2.png)
 
-![](img/p3.png)
+![](assets/p3.png)
 
 
 
@@ -81,7 +81,7 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >
 >   `another version`
 >
-> ![](img/p4.png)
+> ![](assets/p4.png)
 > $$
 > u = \frac{\theta+\pi}{2\pi}
 > $$
@@ -140,17 +140,17 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 
 >  instead we move the rays in the opposite direction
 
-![](img/p5.png)
+![](assets/p5.png)
 
 > Unlike the situation with translations, the surface normal vector also changes, so we need to transform directions too if we get a hit.
 
-![](img/p6.png)
+![](assets/p6.png)
 
 #### 8.Volumes
 
 - [ ] It's possible to write an implementation that handles arbitrary shapes, but we'll leave that as an exercise for the reader.
 
-![](img/p7.png)
+![](assets/p7.png)
 $$
 \mathrm{d}N=-C\cdot \mathrm{d}L
 $$

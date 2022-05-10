@@ -1,15 +1,15 @@
-#include "raytracer.h"
+#include "../raytracer.h"
 
-#include "hittablelist.hpp"
-#include "sphere.hpp"
-#include "camera.hpp"
-#include "material.hpp"
-#include "movingsphere.hpp"
-#include "texture.hpp"
-#include "aarect.hpp"
-#include "box.hpp"
-#include "constantmedium.hpp"
-#include "bvh.hpp"
+#include "../hittable_list.hpp"
+#include "../sphere.hpp"
+#include "../camera.hpp"
+#include "../material.hpp"
+#include "../moving_sphere.hpp"
+#include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../constant_medium.hpp"
+#include "../bvh.hpp"
 
 #include <ctime>
 
@@ -19,7 +19,7 @@ Color ray_color(const Ray &r, const Color &background, const Hittable &world, in
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    //use eps instead of 0. This gets rid of the shadow acne problem.
+    // use eps instead of 0. This gets rid of the shadow acne problem.
     if (!world.hit(r, eps, infinity, rec))
         return background;
 

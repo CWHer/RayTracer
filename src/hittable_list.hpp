@@ -1,5 +1,5 @@
-#ifndef __HITTABLELIST__
-#define __HITTABLELIST__
+#ifndef __HITTABLE_LIST__
+#define __HITTABLE_LIST__
 
 #include "raytracer.h"
 #include "hittable.h"
@@ -33,7 +33,7 @@ public:
 
         for (const auto &object : objects)
         {
-            if (object->hit(r, tmin, closest_so_far, temp_rec)) //only hit the closest one
+            if (object->hit(r, tmin, closest_so_far, temp_rec)) // only hit the closest one
             {
                 hit_anything = 1;
                 closest_so_far = temp_rec.t;
