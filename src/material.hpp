@@ -2,8 +2,7 @@
 // 1. Produce a scattered ray (or say it absorbed the incident ray).
 // 2. If scattered, say how much the ray should be attenuated.
 
-#ifndef __MATERIAL__
-#define __MATERIAL__
+#pragma once
 
 #include "raytracer.h"
 
@@ -40,7 +39,7 @@ private:
     double fuzz;
 
 public:
-    Metal(const Color &_a, double _f) : albedo(_a), fuzz(_f) {}
+    Metal(const Color &a, double f) : albedo(a), fuzz(f) {}
     bool scatter(
         const Ray &r_in, const hit_record &rec, Color &attenuation, Ray &scattered) const override
     {
@@ -67,7 +66,7 @@ private:
     }
 
 public:
-    Dielectric(double _r) : ref_idx(_r) {}
+    Dielectric(double r) : ref_idx(r) {}
 
     bool scatter(
         const Ray &r_in, const hit_record &rec, Color &attenuation, Ray &scattered) const override
@@ -103,5 +102,3 @@ public:
         return 1;
     }
 };
-
-#endif

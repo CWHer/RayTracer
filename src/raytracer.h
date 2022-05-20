@@ -1,5 +1,4 @@
-#ifndef __RAYTRACER__
-#define __RAYTRACER__
+#pragma once
 
 #include <cmath>
 #include <cstdlib>
@@ -64,5 +63,3 @@ inline double clamp(double x, double min, double max)
 #include "color.hpp"
 #include "camera.hpp"
 #include "hittable.h"
-
-#endif

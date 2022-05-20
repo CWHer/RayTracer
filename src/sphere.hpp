@@ -1,5 +1,4 @@
-#ifndef __SPHERE__
-#define __SPHERE__
+#pragma once
 
 #include "hittable.h"
 #include "vec3.hpp"
@@ -13,8 +12,8 @@ private:
 
 public:
     Sphere() {}
-    Sphere(Point3 _c, double _r, shared_ptr<Material> _mat_ptr)
-        : center(_c), radius(_r), mat_ptr(_mat_ptr) {}
+    Sphere(Point3 c, double r, shared_ptr<Material> mat_ptr)
+        : center(c), radius(r), mat_ptr(mat_ptr) {}
 
     bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
     {
@@ -51,5 +50,3 @@ public:
         return 0;
     }
 };
-
-#endif

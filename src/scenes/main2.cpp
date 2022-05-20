@@ -1,12 +1,9 @@
 // A blue-to-white gradient depending on ray Y coordinate
 // Also, Rendering a red sphere
 
+#include "../raytracer.h"
 #include "../ray.hpp"
 #include "../color.hpp"
-
-#include <iostream>
-
-const double eps = 1e-8;
 
 bool hit_sphere(const Point3 &center, double radius, const Ray &r)
 { // not a 2D circle, so discriminat is needed

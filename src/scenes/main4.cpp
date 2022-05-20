@@ -1,7 +1,5 @@
 #include "../raytracer.h"
-
 #include "../hittable_list.hpp"
-#include "../aabb.hpp"
 #include "../camera.hpp"
 #include "../sphere.hpp"
 

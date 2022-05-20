@@ -1,5 +1,4 @@
-#ifndef __HITTABLE__
-#define __HITTABLE__
+#pragma once
 
 #include "ray.hpp"
 class Material;
@@ -25,5 +24,3 @@ class Hittable
 public:
     virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const = 0;
 };
-
-#endif

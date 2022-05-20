@@ -1,12 +1,8 @@
 // Rendering surface normals on a sphere
 
+#include "../raytracer.h"
 #include "../ray.hpp"
 #include "../color.hpp"
-
-#include <iostream>
-#include <cmath>
-
-const double eps = 1e-8;
 
 double hit_sphere(const Point3 &center, double radius, const Ray &r)
 { // not a 2D circle, so discriminat is needed

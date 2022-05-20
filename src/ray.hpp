@@ -1,5 +1,4 @@
-#ifndef __RAY__
-#define __RAY__
+#pragma once
 
 #include "vec3.hpp"
 
@@ -22,5 +21,3 @@ public:
         return orig + t * dir;
     }
 };
-
-#endif

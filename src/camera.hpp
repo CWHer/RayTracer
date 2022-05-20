@@ -1,6 +1,5 @@
 // axis-aligned camera from before
-#ifndef __CAMERA__
-#define __CAMERA__
+#pragma once
 
 #include "raytracer.h"
 
@@ -61,5 +60,3 @@ public:
         return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset);
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __Vec3__
-#define __Vec3__
+#pragma once
 
 #include "raytracer.h"
 
@@ -182,5 +181,3 @@ Vec3 refract(const Vec3 &uv, const Vec3 &n, double etai_over_etat)
 // using color = Vec3;
 typedef Vec3 Point3; // 3D point
 typedef Vec3 Color;  // RGB color
-
-#endif

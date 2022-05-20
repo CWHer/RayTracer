@@ -1,5 +1,4 @@
-#ifndef __HITTABLE_LIST__
-#define __HITTABLE_LIST__
+#pragma once
 
 #include "hittable.h"
 
@@ -40,5 +39,3 @@ public:
         return hit_anything;
     }
 };
-
-#endif

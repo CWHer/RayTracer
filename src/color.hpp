@@ -1,5 +1,4 @@
-#ifndef __COLOR__
-#define __COLOR__
+#pragma once
 
 #include "raytracer.h"
 
@@ -22,5 +21,3 @@ void write_color(std::ostream &out, Color pixel_color, int samples_per_pixel)
         << static_cast<int>(256 * clamp(g, 0, 1 - eps)) << ' '
         << static_cast<int>(256 * clamp(b, 0, 1 - eps)) << '\n';
 }
-
-#endif
