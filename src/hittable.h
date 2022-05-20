@@ -1,5 +1,4 @@
-#ifndef __HITTABLE__
-#define __HITTABLE__
+#pragma once
 
 #include "ray.hpp"
 #include "aabb.hpp"
@@ -170,5 +169,3 @@ public:
         return hasbox;
     }
 };
-
-#endif

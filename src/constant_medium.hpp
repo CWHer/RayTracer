@@ -1,5 +1,4 @@
-#ifndef __CONSTANT_MEDIUM__
-#define __CONSTANT_MEDIUM__
+#pragma once
 
 #include "hittable.h"
 #include "raytracer.h"
@@ -71,5 +70,3 @@ public:
         return boundary->bounding_box(t0, t1, output_box);
     }
 };
-
-#endif

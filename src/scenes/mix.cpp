@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include "./raytracer.h"
+#include "../raytracer.h"
 using namespace std;
 
 const char *filename[] = {

@@ -1,5 +1,4 @@
-#ifndef __PERLIN__
-#define __PERLIN__
+#pragma once
 
 #include "raytracer.h"
 #include <algorithm>
@@ -102,5 +101,3 @@ public:
         return fabs(accum);
     }
 };
-
-#endif

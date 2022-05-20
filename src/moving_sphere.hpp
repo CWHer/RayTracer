@@ -1,5 +1,4 @@
-#ifndef __MOVING_SPHERE__
-#define __MOVING_SPHERE__
+#pragma once
 
 #include "raytracer.h"
 #include "hittable.h"
@@ -71,5 +70,3 @@ public:
         return 1;
     }
 };
-
-#endif

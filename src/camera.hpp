@@ -1,6 +1,5 @@
 // axis-aligned camera from before
-#ifndef __CAMERA__
-#define __CAMERA__
+#pragma once
 
 #include "raytracer.h"
 
@@ -55,5 +54,3 @@ public:
             random_double(time0, time1));
     }
 };
-
-#endif

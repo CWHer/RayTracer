@@ -1,5 +1,4 @@
-#ifndef __SPHERE__
-#define __SPHERE__
+#pragma once
 
 #include "hittable.h"
 #include "vec3.hpp"
@@ -77,5 +76,3 @@ public:
         return 1;
     }
 };
-
-#endif

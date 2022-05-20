@@ -1,5 +1,4 @@
-#ifndef __PARABOLOID__
-#define __PARABOLOID__
+#pragma once
 
 #include "hittable.h"
 #include "vec3.hpp"
@@ -92,5 +91,3 @@ public:
         return true;
     }
 };
-
-#endif

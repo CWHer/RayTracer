@@ -1,5 +1,4 @@
-#ifndef __HEART__
-#define __HEART__
+#pragma once
 
 #include "hittable.h"
 #include "vec3.hpp"
@@ -129,4 +128,3 @@ public:
         return true;
     }
 };
-#endif

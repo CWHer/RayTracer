@@ -1,5 +1,4 @@
-#ifndef __BVH__
-#define __BVH__
+#pragma once
 
 #include "raytracer.h"
 #include "hittable.h"
@@ -111,5 +110,3 @@ BVHnode::BVHnode(std::vector<shared_ptr<Hittable>> &objects,
 
     box = surrounding_box(box_left, box_right);
 }
-
-#endif

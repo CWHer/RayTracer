@@ -1,5 +1,4 @@
-#ifndef __BOX__
-#define __BOX__
+#pragma once
 
 #include "raytracer.h"
 #include "hittable.h"
@@ -47,5 +46,3 @@ public:
         return 1;
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __TEXTURE__
-#define __TEXTURE__
+#pragma once
 
 #include "raytracer.h"
 #include "raytracer_stb_image.h"
@@ -128,5 +127,3 @@ public:
         return Color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
     }
 };
-
-#endif

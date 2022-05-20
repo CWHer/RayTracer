@@ -1,5 +1,4 @@
-#ifndef __HITTABLE_LIST__
-#define __HITTABLE_LIST__
+#pragma once
 
 #include "raytracer.h"
 #include "hittable.h"
@@ -61,5 +60,3 @@ public:
         return 1;
     }
 };
-
-#endif

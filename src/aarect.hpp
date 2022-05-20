@@ -1,5 +1,4 @@
-#ifndef __AARECT__
-#define __AARECT__
+#pragma once
 
 #include "hittable.h"
 #include "aabb.hpp"
@@ -126,4 +125,3 @@ public:
     }
 };
 
-#endif

@@ -1,8 +1,7 @@
 // not what you think....
 // Axis-Aligned Bounding Boxes
 
-#ifndef __AABB__
-#define __AABB__
+#pragma once
 
 #include "raytracer.h"
 
@@ -47,5 +46,3 @@ AABB surrounding_box(AABB box0, AABB box1)
                fmax(box0.max().z(), box1.max().z()));
     return AABB(small, big);
 }
-
-#endif

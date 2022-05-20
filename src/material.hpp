@@ -2,8 +2,7 @@
 // 1. Produce a scattered ray (or say it absorbed the incident ray).
 // 2. If scattered, say how much the ray should be attenuated.
 
-#ifndef __MATERIAL__
-#define __MATERIAL__
+#pragma once
 
 #include "raytracer.h"
 #include "texture.hpp"
@@ -147,5 +146,3 @@ public:
         return 1;
     }
 };
-
-#endif
