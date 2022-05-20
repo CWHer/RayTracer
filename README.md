@@ -1,6 +1,12 @@
 # RayTracer
 
-code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github.io/)
+Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracing.github.io/)
+
+
+
+![](assets/sky.png)
+
+
 
 [TOC]
 
@@ -41,11 +47,11 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 
 #### 2.Bounding Volume Hierarchies
 
-> - idea 
+> **Idea** 
 >
 > A key thing is we are dividing objects into subsets. We are not dividing the screen or the volume. Any object is in just one bounding volume, but bounding volumes can overlap.
 
-![](assets/p1.png)
+<img src="assets/p1.png" style="zoom:50%;" />
 
 > - Axis-Aligned Bounding Boxes
 >
@@ -55,9 +61,9 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 >
 > NaN should be take care of.
 
-![](assets/p2.png)
+<img src="assets/p2.png" style="zoom:50%;" />
 
-![](assets/p3.png)
+<img src="assets/p3.png" style="zoom:50%;" />
 
 
 
@@ -96,8 +102,6 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 
 #### 4.Perlin Noise
 
-- [ ] why does it work?
-
 > - Smoothing out the Result
 >
 >   linearly interpolate
@@ -128,11 +132,11 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 > v = \frac{j}{N_y-1}
 > $$
 >
-> - notice
+> **Note**
 >
->   image_data is left upper corner.
+> image_data is left upper corner.
 >
->   $\theta=-\pi /2 \rightarrow u=0 $
+> $\theta=-\pi /2 \rightarrow u=0 $
 
 #### 6.Rectangles and Lights
 
@@ -140,17 +144,17 @@ code for [RayTracingTheNextWeek](https://github.com/RayTracing/raytracing.github
 
 >  instead we move the rays in the opposite direction
 
-![](assets/p5.png)
+<img src="assets/p5.png" style="zoom:50%;" />
 
 > Unlike the situation with translations, the surface normal vector also changes, so we need to transform directions too if we get a hit.
 
-![](assets/p6.png)
+<img src="assets/p6.png" style="zoom:50%;" />
 
 #### 8.Volumes
 
 - [ ] It's possible to write an implementation that handles arbitrary shapes, but we'll leave that as an exercise for the reader.
 
-![](assets/p7.png)
+<img src="assets/p7.png" style="zoom:50%;" />
 $$
 \mathrm{d}N=-C\cdot \mathrm{d}L
 $$
