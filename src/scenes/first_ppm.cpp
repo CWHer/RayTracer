@@ -19,7 +19,7 @@ int main()
         for (int i = 0; i < image_width; ++i)
         {
             Color pixel_color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
-            write_color(std::cout, pixel_color, 1);
+            writeColor(std::cout, pixel_color, 1);
         }
     }
 
