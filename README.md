@@ -2,9 +2,11 @@
 
 Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracing.github.io/)
 
-
+![](assets/final.png)
 
 ![](assets/sky.png)
+
+![](assets/night.png)
 
 
 
@@ -12,40 +14,40 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 
 #### 主要模块
 
-| name           |                             | members                                     |
-| -------------- | --------------------------- | ------------------------------------------- |
-| Vec3           | 三维向量                    | (x,y,z)                                     |
-| Ray            | 直线                        | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
-| Hittable       | 可碰撞抽象基类              | hit_record/hit/bounding_box/Instances       |
-| FlipFace       | flip normal                 |                                             |
-| Sphere         | 球                          | c&r,hit(Ray,self)                           |
-| MovingSphere   |                             |                                             |
-| HittableList   |                             |                                             |
-| AABB           | Axis-Aligned Bounding Boxes |                                             |
-| BVH            |                             |                                             |
-| AARect         | Axis-Aligned rect           |                                             |
-| Box            |                             |                                             |
-| ConstantMedium |                             |                                             |
-| Camera         |                             | orig/LDcorner/vertical/horiontal...         |
-| Material       | 材质抽象基类                | produce scattered ray/emit                  |
-| Lambertian     | diffuse                     |                                             |
-| Metal          | mirrored reflect            |                                             |
-| Dielectric     | refract                     |                                             |
-| Isotropic      |                             |                                             |
-| Texture        | 纹理抽象基类                |                                             |
-| SolidColor     |                             |                                             |
-| CheckerTexture |                             |                                             |
-| NoiseTexture   |                             |                                             |
-| IMGTexture     |                             |                                             |
-| Perlin         |                             |                                             |
+| Name           |                             |
+| -------------- | --------------------------- |
+| Vec3           | 三维向量                    |
+| Ray            | 直线                        |
+| Hittable       | 可碰撞抽象基类              |
+| FlipFace       | flip normal                 |
+| Sphere         | 球                          |
+| MovingSphere   |                             |
+| HittableList   |                             |
+| AABB           | Axis-Aligned Bounding Boxes |
+| BVH            |                             |
+| AARect         | Axis-Aligned rect           |
+| Box            |                             |
+| ConstantMedium |                             |
+| Camera         |                             |
+| Material       | 材质抽象基类                |
+| Lambertian     | diffuse                     |
+| Metal          | mirrored reflect            |
+| Dielectric     | refract                     |
+| Isotropic      |                             |
+| Texture        | 纹理抽象基类                |
+| SolidColor     |                             |
+| CheckerTexture |                             |
+| NoiseTexture   |                             |
+| IMGTexture     |                             |
+| Perlin         |                             |
 
 
 
-#### 1.Motion Blur
+#### 1. Motion Blur
 
 > In a real camera, the shutter opens and stays open for a time interval, and the camera and objects may move during that time. Its really an average of what the camera sees over that interval that we want.
 
-#### 2.Bounding Volume Hierarchies
+#### 2. Bounding Volume Hierarchies
 
 > **Idea** 
 >
@@ -59,7 +61,7 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 > t_x\cap t_y \cap t_z \neq \phi
 > $$
 >
-> NaN should be take care of.
+> `NaN` should be take care of.
 
 <img src="assets/p2.png" style="zoom:50%;" />
 
@@ -81,7 +83,7 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 >
 > The check for whether there is a bounding box at all is in case you sent in something like an infinite plane that doesn’t have a bounding box.
 
-#### 3.Solid Textures
+#### 3. Solid Textures
 
 > - spherical coordinates
 >
@@ -100,7 +102,7 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 >
 > We can create a checker texture by noting that the sign of sine and cosine just alternates in a regular way, and if we multiply trig functions in all three dimensions, the sign of that product forms a 3D checker pattern.
 
-#### 4.Perlin Noise
+#### 4. Perlin Noise
 
 > - Smoothing out the Result
 >
@@ -122,7 +124,7 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 >
 >   The basic idea is to make color proportional to something like a sine function, and use turbulence to adjust the phase (so it shifts x in sin(x)) which makes the stripes undulate.
 
-#### 5.Image Texture Mapping
+#### 5. Image Texture Mapping
 
 > $$
 > u = \frac{i}{N_x-1}
@@ -138,9 +140,9 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 >
 > $\theta=-\pi /2 \rightarrow u=0 $
 
-#### 6.Rectangles and Lights
+#### 6. Rectangles and Lights
 
-#### 7.Instances
+#### 7. Instances
 
 >  instead we move the rays in the opposite direction
 
@@ -150,7 +152,7 @@ Reference: [_Ray Tracing The Next Week_](https://github.com/RayTracing/raytracin
 
 <img src="assets/p6.png" style="zoom:50%;" />
 
-#### 8.Volumes
+#### 8. Volumes
 
 - [ ] It's possible to write an implementation that handles arbitrary shapes, but we'll leave that as an exercise for the reader.
 
@@ -169,6 +171,6 @@ $$
 >
 > In addition, the above code assumes that once a ray exits the constant medium boundary, it will continue forever outside the boundary. Put another way, it assumes that the boundary shape is convex. So this particular implementation will work for boundaries like boxes or spheres, but will not work with toruses or shapes that contain voids.
 
-#### 9.A Scene Testing All New Features
+#### 9. A Scene Testing All New Features
 
 > The biggest limitation left in the renderer is no shadow rays, but that is why we get caustics and subsurface for free. It’s a double-edged design decision.
