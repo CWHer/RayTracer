@@ -100,18 +100,18 @@ Reference: [_Ray Tracing In One Weekend_](https://github.com/RayTracing/raytraci
 
 #### 主要模块
 
-| name         |                  | members                                     |
-| ------------ | ---------------- | ------------------------------------------- |
-| Vec3         | 三维向量         | (x,y,z)                                     |
-| Ray          | 直线             | $\mathbf{P}(t) = \mathbf{A} + t \mathbf{b}$ |
-| Hittable     | 可碰撞抽象基类   | hit                                         |
-| Sphere       | 球               | c&r,hit(Ray,self)                           |
-| HittableList |                  |                                             |
-| Camera       |                  | orig/LDcorner/vertical/horiontal...         |
-| Material     | 材质抽象基类     | produce scattered ray                       |
-| Lambertian   | diffuse          |                                             |
-| Metal        | mirrored reflect |                                             |
-| Dielectric   | refract          |                                             |
+| Name         |                  |
+| ------------ | ---------------- |
+| Vec3         | 三维向量         |
+| Ray          | 直线             |
+| Hittable     | 可碰撞抽象基类   |
+| Sphere       | 球               |
+| HittableList |                  |
+| Camera       |                  |
+| Material     | 材质抽象基类     |
+| Lambertian   | diffuse          |
+| Metal        | mirrored reflect |
+| Dielectric   | refract          |
 
 
 
