@@ -1,12 +1,7 @@
 #pragma once
 
+#include "raytracer.h"
 #include "hittable.h"
-
-#include <memory>
-#include <vector>
-
-using std::make_shared;
-using std::shared_ptr;
 
 class HittableList : public Hittable
 {
@@ -20,18 +15,21 @@ public:
     void clear() { objects.clear(); }
     void add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    virtual bool hit(
+        const Ray &r, double t_min,
+        double t_max, HitRecord &rec) const override
     {
-        hit_record temp_rec;
+        HitRecord temp_rec;
         bool hit_anything = false;
-        auto closest_so_far = tmax;
+        auto closest_t = t_max;
 
         for (const auto &object : objects)
         {
-            if (object->hit(r, tmin, closest_so_far, temp_rec)) // only hit the closest one
+            // only hit the closest one
+            if (object->hit(r, t_min, closest_t, temp_rec))
             {
                 hit_anything = true;
-                closest_so_far = temp_rec.t;
+                closest_t = temp_rec.t;
                 rec = temp_rec;
             }
         }
