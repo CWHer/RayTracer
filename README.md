@@ -115,7 +115,7 @@ Reference: [_Ray Tracing In One Weekend_](https://github.com/RayTracing/raytraci
 
 
 
-#### 1.First PPM image
+#### 1. First PPM image
 
 <img src="assets/p0.png" style="zoom: 33%;" />
 
@@ -124,11 +124,11 @@ Reference: [_Ray Tracing In One Weekend_](https://github.com/RayTracing/raytraci
 1. The pixels are written out in rows with pixels left to right.
 2. The rows are written out from top to bottom.
 
-#### 2.A blue-to-white gradient depending on ray Y coordinate
+#### 2. A blue-to-white gradient depending on ray Y coordinate
 
 <img src="assets/p1.png" style="zoom:50%;" />
 
-#### 3.Rendering surface normals on a sphere
+#### 3. Rendering surface normals on a sphere
 
 when a ray hits a sphere,
 $$
@@ -143,11 +143,11 @@ $$
 
 > A common trick used for visualizing normals (because it’s easy and somewhat intuitive to assume $\vec{n}$ is a unit length vector — so each component is between −1 and 1) is to map each component to the interval from 0 to 1, and then map x/y/z to r/g/b.
 
-#### 4.An Abstraction for Hittable Objects
+#### 4. An Abstraction for Hittable Objects
 
 >Most ray tracers have found it convenient to add a valid interval for hits $t_{min}$ to $t_{max}$, so the hit only “counts” if $t_{min}<t<t_{max}$.
 
-#### 5.Front Faces Versus Back Faces&A List of Hittable Objects
+#### 5. Front Faces Versus Back Faces&A List of Hittable Objects
 
 <img src="assets/p2.png" style="zoom:50%;" />
 
@@ -155,13 +155,13 @@ $$
 >
 > This can be determined by taking the dot product of the two vectors, where if their dot is positive, the ray is inside the sphere.
 
-#### 6.Antialiasing
+#### 6. Antialiasing
 
 > When a real camera takes a picture, there are usually no jaggies along edges because the edge pixels are a blend of some foreground and some background. We can get the same effect by averaging a bunch of samples inside each pixel.
 
 <img src="assets/p3.png" style="zoom:50%;" />
 
-#### 7.Diffuse Materials (漫反射)
+#### 7. Diffuse Materials
 
 > Light that reflects off a diffuse surface has its direction randomized.
 
@@ -194,7 +194,7 @@ $$
 > 
 >A more intuitive approach is to have a uniform scatter direction for all angles away from the hit point, with no dependence on the angle from the normal.
 
-#### 8.Metal
+#### 8. Metal
 
 Mirrored Light Reflection
 $$
@@ -209,7 +209,7 @@ Fuzzy Reflection
 
 > The catch is that for big spheres or grazing rays, we may scatter below the surface. We can just have the surface absorb those.
 
-#### 9.Dielectrics
+#### 9. Dielectrics
 
 > When a light ray hits them, it splits into a reflected ray and a refracted (transmitted) ray. We’ll handle that by randomly choosing between reflection or refraction, and only generating one scattered ray per interaction.
 
@@ -236,9 +236,8 @@ $$
 >
 >   When calculate hit() in Sphere class, $r^{2}$ is used in fomulations. So negetive radius functions well. Whereas when calculating the outward normal, negative radius results in a negative outward normal, which is actually inward normal.
 
-![](assets/image0.jpg)
 
-#### 10.Positionable Camera
+#### 10. Positionable Camera
 
 <img src="assets/p9.png" style="zoom: 33%;" />
 
@@ -250,6 +249,6 @@ $$
 >
 > $\mathbf{v}=\mathbf{w}\times\mathbf{u}$
 
-#### 11.Defocus Blur
+#### 11. Defocus Blur
 
 <img src="assets/p11.png" style="zoom: 67%;" />
