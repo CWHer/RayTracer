@@ -1,7 +1,6 @@
 #pragma once
 
 #include "raytracer.h"
-#include "hittable.h"
 #include "material.hpp"
 #include "aabb.hpp"
 
@@ -15,58 +14,56 @@ private:
 
 public:
     MovingSphere() {}
-    MovingSphere(Point3 _cen0, Point3 _cen1, double _t0, double _t1, double _r, shared_ptr<Material> _m)
-        : center0(_cen0), center1(_cen1), time0(_t0), time1(_t1), radius(_r), mat_ptr(_m) {}
+    MovingSphere(Point3 cen0, Point3 cen1,
+                 double t0, double t1, double r,
+                 shared_ptr<Material> m)
+        : center0(cen0), center1(cen1),
+          time0(t0), time1(t1), radius(r), mat_ptr(m) {}
 
     Point3 center(double time) const
     {
         return center0 + ((time - time0) / (time1 - time0)) * (center1 - center0);
     }
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    bool hit(const Ray &r, double t_min,
+             double t_max, HitRecord &rec) const override
     {
         Vec3 oc = r.origin() - center(r.time());
-        auto a = r.direction().length_sqr();
+        auto a = r.direction().lengthSquared();
         auto half_b = dot(oc, r.direction());
-        auto c = oc.length_sqr() - radius * radius;
-        auto discriminant = half_b * half_b - a * c;
+        auto c = oc.lengthSquared() - radius * radius;
 
-        if (discriminant > 0)
+        auto discriminant = half_b * half_b - a * c;
+        if (discriminant < 0)
+            return false;
+        auto sqrtd = sqrt(discriminant);
+
+        // Find the nearest root that lies in the acceptable range.
+        auto root = (-half_b - sqrtd) / a;
+        if (root < t_min || t_max < root)
         {
-            auto root = sqrt(discriminant);
-            auto temp = (-half_b - root) / a; // negative root
-            if (temp < tmax && temp > tmin)
-            {
-                rec.t = temp;
-                rec.p = r.at(rec.t);
-                Vec3 outward_norm = (rec.p - center(r.time())) / radius;
-                rec.set_face_normal(r, outward_norm);
-                rec.mat_ptr = mat_ptr;
-                return 1;
-            }
-            temp = (-half_b + root) / a; // positive root
-            if (temp < tmax && temp > tmin)
-            {
-                rec.t = temp;
-                rec.p = r.at(rec.t);
-                Vec3 outward_norm = (rec.p - center(r.time())) / radius;
-                rec.set_face_normal(r, outward_norm);
-                rec.mat_ptr = mat_ptr;
-                return 1;
-            }
+            root = (-half_b + sqrtd) / a;
+            if (root < t_min || t_max < root)
+                return false;
         }
-        return 0;
+
+        rec.t = root;
+        rec.p = r.at(rec.t);
+        auto outward_normal = (rec.p - center(r.time())) / radius;
+        rec.setFaceNormal(r, outward_normal);
+        rec.mat_ptr = mat_ptr;
+
+        return true;
     }
 
-    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    bool boundingBox(double t0, double t1,
+                     AABB &output_box) const override
     {
-        AABB box0(
-            center(t0) - Vec3(radius, radius, radius),
-            center(t0) + Vec3(radius, radius, radius));
-        AABB box1(
-            center(t1) - Vec3(radius, radius, radius),
-            center(t1) + Vec3(radius, radius, radius));
-        output_box = surrounding_box(box0, box1);
-        return 1;
+        AABB box0(center(t0) - Vec3(radius, radius, radius),
+                  center(t0) + Vec3(radius, radius, radius));
+        AABB box1(center(t1) - Vec3(radius, radius, radius),
+                  center(t1) + Vec3(radius, radius, radius));
+        output_box = surroundingBox(box0, box1);
+        return true;
     }
 };

@@ -1,4 +1,3 @@
-// not what you think....
 // Axis-Aligned Bounding Boxes
 
 #pragma once
@@ -8,35 +7,37 @@
 class AABB
 {
 private:
-    Point3 mn;
-    Point3 mx;
+    Point3 min_p;
+    Point3 max_p;
 
 public:
     AABB() {}
-    AABB(const Point3 &_mn, const Point3 &_mx) : mn(_mn), mx(_mx) {}
+    AABB(const Point3 &min,
+         const Point3 &max)
+        : min_p(min), max_p(max) {}
 
-    Point3 min() const { return mn; }
-    Point3 max() const { return mx; }
+    Point3 min() const { return min_p; }
+    Point3 max() const { return max_p; }
 
-    bool hit(const Ray &r, double tmin, double tmax) const
+    bool hit(const Ray &r, double t_min, double t_max) const
     {
         for (int i = 0; i < 3; ++i)
         {
-            auto invD = 1.0 / r.direction()[i];
-            auto t0 = (mn[i] - r.origin()[i]) * invD;
-            auto t1 = (mx[i] - r.origin()[i]) * invD;
+            auto inv_d = 1.0 / r.direction()[i];
+            auto t0 = (min_p[i] - r.origin()[i]) * inv_d;
+            auto t1 = (max_p[i] - r.origin()[i]) * inv_d;
             if (t0 > t1)
                 std::swap(t0, t1);
-            tmin = fmax(t0, tmin);
-            tmax = fmin(t1, tmax);
-            if (tmax <= tmin)
-                return 0;
+            t_min = fmax(t0, t_min);
+            t_max = fmin(t1, t_max);
+            if (t_max <= t_min)
+                return false;
         }
-        return 1;
+        return true;
     }
 };
 
-AABB surrounding_box(AABB box0, AABB box1)
+AABB surroundingBox(AABB box0, AABB box1)
 {
     Point3 small(fmin(box0.min().x(), box1.min().x()),
                  fmin(box0.min().y(), box1.min().y()),

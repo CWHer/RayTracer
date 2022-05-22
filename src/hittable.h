@@ -2,30 +2,34 @@
 
 #include "ray.hpp"
 #include "aabb.hpp"
+
 class Material;
 
-struct hit_record
+struct HitRecord
 {
     Point3 p;
-    Vec3 norm;
-    // mat_ptr will be set to point at the material pointer the sphere was given when it was set up in main().
+    Vec3 normal;
     shared_ptr<Material> mat_ptr;
-    double t;    // Ray
+    double t;
     double u, v; // surface coordinates
     bool front_face;
 
-    inline void set_face_normal(const Ray &r, const Vec3 &outward_normal)
+    inline void setFaceNormal(const Ray &r, const Vec3 &outward_normal)
     {
         front_face = dot(r.direction(), outward_normal) < 0;
-        norm = front_face ? outward_normal : -outward_normal;
+        normal = front_face ? outward_normal : -outward_normal;
     }
 };
 
 class Hittable
 {
 public:
-    virtual bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const = 0;
-    virtual bool bounding_box(double t0, double t1, AABB &output_box) const = 0;
+    virtual bool hit(
+        const Ray &r, double t_min,
+        double t_max, HitRecord &rec) const = 0;
+
+    virtual bool boundingBox(
+        double t0, double t1, AABB &output_box) const = 0;
 };
 
 class FlipFace : public Hittable
@@ -34,19 +38,21 @@ private:
     shared_ptr<Hittable> ptr;
 
 public:
-    FlipFace(shared_ptr<Hittable> _p) : ptr(_p) {}
+    FlipFace(shared_ptr<Hittable> p) : ptr(p) {}
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    bool hit(const Ray &r, double t_min,
+             double t_max, HitRecord &rec) const override
     {
-        if (!ptr->hit(r, tmin, tmax, rec))
-            return 0;
-        rec.front_face ^= 1;
-        return 1;
+        if (!ptr->hit(r, t_min, t_max, rec))
+            return false;
+        rec.front_face = !rec.front_face;
+        return true;
     }
 
-    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    bool boundingBox(double t0, double t1,
+                     AABB &output_box) const override
     {
-        return ptr->bounding_box(t0, t1, output_box);
+        return ptr->boundingBox(t0, t1, output_box);
     }
 };
 
@@ -57,28 +63,30 @@ private:
     Vec3 offset;
 
 public:
-    Translate(shared_ptr<Hittable> _p, const Vec3 &_offset)
-        : ptr(_p), offset(_offset) {}
+    Translate(shared_ptr<Hittable> p,
+              const Vec3 &offset)
+        : ptr(p), offset(offset) {}
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    bool hit(const Ray &r, double t_min,
+             double t_max, HitRecord &rec) const override
     {
         Ray moved_r(r.origin() - offset, r.direction(), r.time());
-        if (!ptr->hit(moved_r, tmin, tmax, rec))
-            return 0;
+        if (!ptr->hit(moved_r, t_min, t_max, rec))
+            return false;
 
         rec.p += offset;
-        // rec.set_face_normal(moved_r, rec.norm); //already done? normal don't change
-        return 1;
+        rec.setFaceNormal(moved_r, rec.normal);
+        return true;
     }
 
-    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    bool boundingBox(double t0, double t1,
+                     AABB &output_box) const override
     {
-        if (!ptr->bounding_box(t0, t1, output_box))
-            return 0;
-        output_box = AABB(
-            output_box.min() + offset,
-            output_box.max() + offset);
-        return 1;
+        if (!ptr->boundingBox(t0, t1, output_box))
+            return false;
+        output_box = AABB(output_box.min() + offset,
+                          output_box.max() + offset);
+        return true;
     }
 };
 
@@ -92,25 +100,20 @@ private:
     AABB bbox;
 
 public:
-    RotateY(shared_ptr<Hittable> _p, double angle) : ptr(_p)
+    RotateY(shared_ptr<Hittable> p, double angle) : ptr(p)
     {
-        auto radians = degrees_to_radians(angle);
+        auto radians = deg2rad(angle);
         sin_theta = sin(radians);
         cos_theta = cos(radians);
-        hasbox = ptr->bounding_box(0, 1, bbox);
+        hasbox = ptr->boundingBox(0, 1, bbox);
 
-        // if (!hasbox)
-        // return;
-
-        Point3 min(infinity, infinity, infinity);
-        Point3 max(-infinity, -infinity, -infinity);
+        Point3 min(INF, INF, INF);
+        Point3 max(-INF, -INF, -INF);
 
         for (int i = 0; i < 2; ++i)
-        {
             for (int j = 0; j < 2; ++j)
-            {
                 for (int k = 0; k < 2; ++k)
-                { // 8 grids
+                {
                     auto x = i * bbox.max().x() + (1 - i) * bbox.min().x();
                     auto y = j * bbox.max().y() + (1 - j) * bbox.min().y();
                     auto z = k * bbox.max().z() + (1 - k) * bbox.min().z();
@@ -126,13 +129,12 @@ public:
                         max[c] = fmax(max[c], tester[c]);
                     }
                 }
-            }
-        }
 
         bbox = AABB(min, max);
     }
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const override
+    bool hit(const Ray &r, double t_min,
+             double t_max, HitRecord &rec) const override
     {
         auto origin = r.origin();
         auto direction = r.direction();
@@ -145,25 +147,26 @@ public:
 
         Ray rotated_r(origin, direction, r.time());
 
-        if (!ptr->hit(rotated_r, tmin, tmax, rec))
-            return 0;
+        if (!ptr->hit(rotated_r, t_min, t_max, rec))
+            return false;
 
         auto p = rec.p;
-        auto normal = rec.norm;
+        auto normal = rec.normal;
 
         p[0] = cos_theta * rec.p[0] + sin_theta * rec.p[2];
         p[2] = -sin_theta * rec.p[0] + cos_theta * rec.p[2];
 
-        normal[0] = cos_theta * rec.norm[0] + sin_theta * rec.norm[2];
-        normal[2] = -sin_theta * rec.norm[0] + cos_theta * rec.norm[2];
+        normal[0] = cos_theta * rec.normal[0] + sin_theta * rec.normal[2];
+        normal[2] = -sin_theta * rec.normal[0] + cos_theta * rec.normal[2];
 
         rec.p = p;
-        rec.set_face_normal(rotated_r, normal);
+        rec.setFaceNormal(rotated_r, normal);
 
-        return 1;
+        return true;
     }
 
-    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    bool boundingBox(double t0, double t1,
+                     AABB &output_box) const override
     {
         output_box = bbox;
         return hasbox;

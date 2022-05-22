@@ -1,60 +1,53 @@
 #pragma once
 
+#include <ctime>
 #include <cmath>
 #include <cstdlib>
 #include <limits>
 #include <memory>
 #include <iostream>
 #include <random>
+#include <vector>
+#include <algorithm>
 
 // Usings
 
 using std::make_shared;
 using std::shared_ptr;
-using std::sqrt;
 
 // Constants
 
-const double infinity = std::numeric_limits<double>::infinity();
-// const double pi = 3.1415926535897932385;
-const double pi = acos(-1);
-const double eps = 1e-10;
-// used in hit tmin
+const double INF = std::numeric_limits<double>::infinity();
+const double PI = acos(-1);
 
 // Utility Functions
 
-inline double degrees_to_radians(double degrees)
+inline double deg2rad(double degrees)
 {
-    return degrees * pi / 180;
+    return degrees * PI / 180;
 }
 
-// inline double random_double()
-// {
-//     // Returns a random real in [0,1).
-//     return rand() / (RAND_MAX + 1.0);
-// }
-
-inline int random_int(int min, int max)
+inline int randomInt(int min, int max)
 {
     static std::random_device rd;
-    static std::mt19937 generator(rd());
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(generator);
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(gen);
 }
 
-inline double random_double()
+inline double randomReal()
 {
-    // Returns a random real in [0,1).
+    // Returns a random real in [0, 1).
     static std::random_device rd;
-    static std::mt19937 generator(rd()); // Mersenne Twister 19937 generator
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    return distribution(generator);
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<double> dist(0.0, 1.0);
+    return dist(gen);
 }
 
-inline double random_double(double min, double max)
+inline double randomReal(double min, double max)
 {
-    // Returns a random real in [min,max).
-    return min + (max - min) * random_double();
+    // Returns a random real in [min, max).
+    return min + (max - min) * randomReal();
 }
 
 inline double clamp(double x, double min, double max)
@@ -69,5 +62,3 @@ inline double clamp(double x, double min, double max)
 #include "ray.hpp"
 #include "vec3.hpp"
 #include "color.hpp"
-#include "camera.hpp"
-#include "hittable.h"

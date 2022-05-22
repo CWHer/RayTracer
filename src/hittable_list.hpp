@@ -4,15 +4,9 @@
 #include "hittable.h"
 #include "aabb.hpp"
 
-#include <memory>
-#include <vector>
-
-using std::make_shared;
-using std::shared_ptr;
-
 class HittableList : public Hittable
 {
-    friend class BVHnode;
+    friend class BVHNode;
 
 private:
     std::vector<shared_ptr<Hittable>> objects;
@@ -24,18 +18,19 @@ public:
     void clear() { objects.clear(); }
     void add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    bool hit(const Ray &r, double tmin, double tmax, hit_record &rec) const
+    bool hit(const Ray &r, double t_min,
+             double t_max, HitRecord &rec) const
     {
-        hit_record temp_rec;
-        bool hit_anything = 0;
-        auto closest_so_far = tmax;
+        HitRecord temp_rec;
+        bool hit_anything = false;
+        auto closest_t = t_max;
 
         for (const auto &object : objects)
         {
-            if (object->hit(r, tmin, closest_so_far, temp_rec)) // only hit the closest one
+            if (object->hit(r, t_min, closest_t, temp_rec))
             {
-                hit_anything = 1;
-                closest_so_far = temp_rec.t;
+                hit_anything = true;
+                closest_t = temp_rec.t;
                 rec = temp_rec;
             }
         }
@@ -43,20 +38,24 @@ public:
         return hit_anything;
     }
 
-    bool bounding_box(double t0, double t1, AABB &output_box) const override
+    bool boundingBox(double t0, double t1,
+                     AABB &output_box) const override
     {
         if (objects.empty())
-            return 0;
+            return false;
+
         AABB temp_box;
-        bool first_box = 1;
+        bool first_box = true;
 
         for (const auto &object : objects)
         {
-            if (!object->bounding_box(t0, t1, temp_box))
-                return 0;
-            output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
-            first_box = 0;
+            if (!object->boundingBox(t0, t1, temp_box))
+                return false;
+            output_box = first_box
+                             ? temp_box
+                             : surroundingBox(output_box, temp_box);
+            first_box = false;
         }
-        return 1;
+        return true;
     }
 };
