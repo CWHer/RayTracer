@@ -72,7 +72,7 @@ int main()
                 Ray r = cam.getRay(u, v);
                 image[j][i] += rayColor(r, world, max_depth);
             }
-#pragma critical
+#pragma omp critical
         std::cerr << "\rFinished lines: " << ++finished_cnt << std::flush;
     }
 
