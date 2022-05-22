@@ -1,5 +1,4 @@
-#ifndef __Vec3__
-#define __Vec3__
+#pragma once
 
 #include "raytracer.h"
 
@@ -14,7 +13,7 @@ class Vec3
     friend Vec3 operator/(const Vec3 &, double);
     friend double dot(const Vec3 &, const Vec3 &);
     friend Vec3 cross(const Vec3 &, const Vec3 &);
-    friend Vec3 unit_vector(Vec3 v);
+    friend Vec3 unitVector(Vec3 v);
 
 private:
     double e[3];
@@ -29,29 +28,31 @@ public:
 
     inline static Vec3 random()
     {
-        return Vec3(random_double(), random_double(), random_double());
+        return Vec3(randomReal(), randomReal(), randomReal());
     }
 
     inline static Vec3 random(double min, double max)
     {
-        return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+        return Vec3(randomReal(min, max), randomReal(min, max), randomReal(min, max));
     }
 
     Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
     double operator[](int i) const { return e[i]; }
     double &operator[](int i) { return e[i]; }
 
-    Vec3 &operator+=(const Vec3 &rhs)
+    Vec3 &operator+=(const Vec3 &v)
     {
-        for (int i = 0; i < 3; ++i)
-            e[i] += rhs.e[i];
+        e[0] += v.e[0];
+        e[1] += v.e[1];
+        e[2] += v.e[2];
         return *this;
     }
 
     Vec3 &operator*=(const double t)
     {
-        for (int i = 0; i < 3; ++i)
-            e[i] *= t;
+        e[0] *= t;
+        e[1] *= t;
+        e[2] *= t;
         return *this;
     }
 
@@ -62,12 +63,19 @@ public:
 
     double length() const
     {
-        return std::sqrt(length_sqr());
+        return std::sqrt(lengthSquared());
     }
 
-    double length_sqr() const
+    double lengthSquared() const
     {
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
+    }
+
+    bool nearZero() const
+    {
+        return std::fabs(e[0]) < 1e-6 &&
+               std::fabs(e[1]) < 1e-6 &&
+               std::fabs(e[2]) < 1e-6;
     }
 };
 
@@ -120,46 +128,44 @@ inline Vec3 cross(const Vec3 &u, const Vec3 &v)
                 u.e[0] * v.e[1] - u.e[1] * v.e[0]);
 }
 
-inline Vec3 unit_vector(Vec3 v)
+inline Vec3 unitVector(Vec3 v)
 {
     return v / v.length();
 }
 
 // rand functions
-inline Vec3 random_in_unit_sphere()
+inline Vec3 randomInUnitSphere()
 {
-    // old version
-    Vec3 p;
-    do
+    while (true)
     {
-        p = Vec3::random(-1, 1);
-    } while (p.length() >= 1);
-    return p;
+        Vec3 p = Vec3::random(-1, 1);
+        if (p.length() < 1)
+            return p;
+    }
 }
 
-inline Vec3 random_in_unit_disk()
+inline Vec3 randomInUnitDisk()
 {
-    Vec3 p;
-    do
+    while (true)
     {
-        p = Vec3(random_double(-1, 1), random_double(-1, 1), 0);
-    } while (p.length() >= 1);
-    return p;
+        Vec3 p = Vec3(randomReal(-1, 1), randomReal(-1, 1), 0);
+        if (p.length() < 1)
+            return p;
+    }
 }
 
-inline Vec3 random_in_hemisphere(const Vec3 &normal)
-{ // a uniform scatter direction for all angles
-    Vec3 in_unit_sphere = random_in_unit_sphere();
-    if (dot(in_unit_sphere, normal) > 0) // In the same hemisphere as the normal
-        return in_unit_sphere;
-    else
-        return -in_unit_sphere;
+inline Vec3 randomInHemisphere(const Vec3 &normal)
+{
+    // a uniform scatter direction for all angles
+    Vec3 in_unit_sphere = randomInUnitSphere();
+    return dot(in_unit_sphere, normal) > 0 ? in_unit_sphere : -in_unit_sphere;
 }
 
-inline Vec3 random_unit_vector()
-{ // on the surface of a unit sphere
-    auto a = random_double(0, 2 * pi);
-    auto z = random_double(-1, 1);
+inline Vec3 randomUnitVector()
+{
+    // on the surface of a unit sphere
+    auto a = randomReal(0, 2 * PI);
+    auto z = randomReal(-1, 1);
     auto r = sqrt(1 - z * z);
     return Vec3(r * cos(a), r * sin(a), z);
 }
@@ -170,17 +176,14 @@ Vec3 reflect(const Vec3 &v, const Vec3 &n)
 }
 
 Vec3 refract(const Vec3 &uv, const Vec3 &n, double etai_over_etat)
-{ // uv should be unit vector
+{
+    // uv should be unit vector
     auto cos_theta = dot(-uv, n);
     Vec3 r_out_parallel = etai_over_etat * (uv + cos_theta * n);
-    Vec3 r_out_perp = -sqrt(1.0 - r_out_parallel.length_sqr()) * n;
+    Vec3 r_out_perp = -sqrt(fabs(1.0 - r_out_parallel.lengthSquared())) * n;
     return r_out_parallel + r_out_perp;
 }
 
 // Type aliases for Vec3
-// using point3 = Vec3;
-// using color = Vec3;
 typedef Vec3 Point3; // 3D point
 typedef Vec3 Color;  // RGB color
-
-#endif

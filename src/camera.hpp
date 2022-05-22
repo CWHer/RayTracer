@@ -1,6 +1,5 @@
 // axis-aligned camera from before
-#ifndef __CAMERA__
-#define __CAMERA__
+#pragma once
 
 #include "raytracer.h"
 
@@ -13,7 +12,7 @@ private:
     Vec3 vertical;
     Vec3 u, v, w;
     double lens_radius;
-    double time0, time1; // open/close times
+    double time0, time1; // open / close times
 
 public:
     Camera(
@@ -27,13 +26,13 @@ public:
         double t0 = 0,
         double t1 = 0)
     {
-        auto theta = degrees_to_radians(vfov);
+        auto theta = deg2rad(vfov);
         auto h = tan(theta / 2);
         auto viewport_height = 2 * h;
         auto viewport_width = aspect_ratio * viewport_height;
 
-        w = unit_vector(lookfrom - lookat);
-        u = unit_vector(cross(vup, w));
+        w = unitVector(lookfrom - lookat);
+        u = unitVector(cross(vup, w));
         v = cross(w, u);
 
         origin = lookfrom;
@@ -45,15 +44,14 @@ public:
         time0 = t0, time1 = t1;
     }
 
-    Ray get_ray(double s, double t) const
-    { // origin->(u,v)
-        Vec3 rd = lens_radius * random_in_unit_disk();
+    Ray getRay(double s, double t) const
+    {
+        // origin -> (u, v)
+        Vec3 rd = lens_radius * randomInUnitDisk();
         Vec3 offset = u * rd.x() + v * rd.y();
-        return Ray(
-            origin + offset,
-            lower_left_corner + s * horizontal + t * vertical - origin - offset,
-            random_double(time0, time1));
+        return Ray(origin + offset,
+                   lower_left_corner + s * horizontal +
+                       t * vertical - origin - offset,
+                   randomReal(time0, time1));
     }
 };
-
-#endif

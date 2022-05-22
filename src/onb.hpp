@@ -1,8 +1,6 @@
-#ifndef __ONB__
-#define __ONB__
+#pragma once
 
 #include "raytracer.h"
-#include "vec3.hpp"
 
 class ONB
 {
@@ -23,16 +21,14 @@ public:
 
     Vec3 local(const Vec3 &a) const
     {
-        return local(a.x(), a.y(), a.z());
+        return a.x() * u() + a.y() * v() + a.z() * w();
     }
 
-    void build_from_w(const Vec3 &n)
+    void buildFromW(const Vec3 &n)
     {
-        axis[2] = unit_vector(n);
-        Vec3 a = (fabs(w().x()) > 0.9) ? Vec3(0, 1, 0) : Vec3(1, 0, 0);
-        axis[1] = unit_vector(cross(w(), a));
+        axis[2] = unitVector(n);
+        Vec3 a = fabs(w().x()) > 0.9 ? Vec3(0, 1, 0) : Vec3(1, 0, 0);
+        axis[1] = unitVector(cross(w(), a));
         axis[0] = cross(w(), v());
     }
 };
-
-#endif

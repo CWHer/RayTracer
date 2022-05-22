@@ -1,30 +1,29 @@
-#ifndef __PERLIN__
-#define __PERLIN__
+#pragma once
 
 #include "raytracer.h"
-#include <algorithm>
-#include <cstdlib>
-#include <ctime>
 
 class Perlin
 {
 private:
     static const int point_count = 256;
-    Vec3 *ranvec;
-    int *perm_x;
-    int *perm_y;
-    int *perm_z;
+    std::vector<Vec3> ranvec;
+    std::vector<int> perm_x;
+    std::vector<int> perm_y;
+    std::vector<int> perm_z;
 
-    int *perlin_generate_perm()
+    static std::vector<int> generatePerm()
     {
-        auto p = new int[point_count];
+        std::vector<int> p(point_count);
         for (int i = 0; i < point_count; ++i)
             p[i] = i;
-        std::random_shuffle(p, p + point_count);
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        std::shuffle(p.begin(), p.end(), gen);
         return p;
     }
 
-    inline double perlin_interp(Vec3 c[2][2][2], double u, double v, double w) const
+    inline double interp(Vec3 c[2][2][2],
+                         double u, double v, double w) const
     {
         auto uu = u * u * (3 - 2 * u);
         auto vv = v * v * (3 - 2 * v);
@@ -48,22 +47,13 @@ private:
 public:
     Perlin()
     {
-        std::srand((unsigned)std::time(0));
-        ranvec = new Vec3[point_count];
+        ranvec.resize(point_count);
         for (int i = 0; i < point_count; ++i)
-            ranvec[i] = unit_vector(Vec3::random(-1, 1));
+            ranvec[i] = unitVector(Vec3::random(-1, 1));
 
-        perm_x = perlin_generate_perm();
-        perm_y = perlin_generate_perm();
-        perm_z = perlin_generate_perm();
-    }
-
-    ~Perlin()
-    {
-        delete[] ranvec;
-        delete[] perm_x;
-        delete[] perm_y;
-        delete[] perm_z;
+        perm_x = generatePerm();
+        perm_y = generatePerm();
+        perm_z = generatePerm();
     }
 
     double noise(const Point3 &p) const
@@ -71,9 +61,9 @@ public:
         auto u = p.x() - floor(p.x());
         auto v = p.y() - floor(p.y());
         auto w = p.z() - floor(p.z());
-        int i = floor(p.x());
-        int j = floor(p.y());
-        int k = floor(p.z());
+        int i = static_cast<int>(floor(p.x()));
+        int j = static_cast<int>(floor(p.y()));
+        int k = static_cast<int>(floor(p.z()));
         Vec3 c[2][2][2];
 
         for (int di = 0; di < 2; di++)
@@ -83,7 +73,7 @@ public:
                                            perm_y[(j + dj) & 255] ^
                                            perm_z[(k + dk) & 255]];
 
-        return perlin_interp(c, u, v, w);
+        return interp(c, u, v, w);
     }
 
     double turb(const Point3 &p, int depth = 7) const
@@ -102,5 +92,3 @@ public:
         return fabs(accum);
     }
 };
-
-#endif
