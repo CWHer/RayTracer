@@ -4,70 +4,58 @@
 #include "../camera.hpp"
 #include "../material.hpp"
 #include "../texture.hpp"
+#include "../aarect.hpp"
+#include "../box.hpp"
+#include "../constant_medium.hpp"
 #include "../bvh.hpp"
 
-Color rayColor(const Ray &r, const Hittable &world, int depth)
+Color rayColor(const Ray &r, const Color &background, const Hittable &world, int depth)
 {
-
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
+
     HitRecord rec;
     // use 0.001 instead of 0.
     //  This gets rid of the shadow acne problem.
     if (!world.hit(r, 0.001, INF, rec))
-    {
-        Vec3 unit_direction = unitVector(r.direction());
-        auto t = 0.5 * (unit_direction.y() + 1.0);
-        return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
-    }
+        return background;
 
     Ray scattered;
     Color attenuation;
     Color color = rec.mat_ptr->emitted(rec.u, rec.v, rec.p); // emitted
 
     if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-        color += attenuation * rayColor(scattered, world, depth - 1);
+        color += attenuation * rayColor(scattered, background, world, depth - 1);
     return color;
 }
 
-HittableList randomScene()
+HittableList cornellSmoke()
 {
     HittableList objects;
 
-    auto d = 0.6;
-    for (int a = -6; a < 6; a++)
-        for (int b = -6; b < 6; b++)
-            for (int c = -2; c < 2; ++c)
-            {
-                auto choose_mat = randomReal();
-                Point3 center(a * 1.0 / d + 0.4 * randomReal(),
-                              b * 1.0 / d + 0.4 * randomReal(),
-                              c * 1.0 / d + 0.4 * randomReal());
-                shared_ptr<Material> sphere_material;
+    auto red = make_shared<Lambertian>(Color(.65, .05, .05));
+    auto white = make_shared<Lambertian>(Color(.73, .73, .73));
+    auto green = make_shared<Lambertian>(Color(.12, .45, .15));
+    auto light = make_shared<DiffuseLight>(Color(7, 7, 7));
 
-                if (choose_mat < 0.9)
-                {
-                    // diffuse
-                    auto emit = make_shared<SolidColor>(Vec3::random());
-                    sphere_material = make_shared<DiffuseLight>(emit);
-                    objects.add(make_shared<Sphere>(center, 0.2, sphere_material));
-                }
-                else if (choose_mat < 0.95)
-                {
-                    // metal
-                    auto albedo = Vec3::random(0.5, 1);
-                    auto fuzz = randomReal(0, 0.5);
-                    sphere_material = make_shared<Metal>(albedo, fuzz);
-                    objects.add(make_shared<Sphere>(center, 0.3, sphere_material));
-                }
-                else
-                {
-                    // glass
-                    sphere_material = make_shared<Dielectric>(1.5);
-                    objects.add(make_shared<Sphere>(center, 0.25, sphere_material));
-                }
-            }
+    objects.add(make_shared<FlipFace>(make_shared<YZRect>(0, 555, 0, 555, 555, green)));
+    objects.add(make_shared<YZRect>(0, 555, 0, 555, 0, red));
+    objects.add(make_shared<XZRect>(113, 443, 127, 432, 554, light));
+    objects.add(make_shared<FlipFace>(make_shared<XZRect>(0, 555, 0, 555, 555, white)));
+    objects.add(make_shared<XZRect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<FlipFace>(make_shared<XYRect>(0, 555, 0, 555, 555, white)));
+
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    box1 = make_shared<RotateY>(box1, 15);
+    box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
+
+    shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
+    box2 = make_shared<RotateY>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
+
+    objects.add(make_shared<ConstantMedium>(box1, 0.01, Color(0, 0, 0)));
+    objects.add(make_shared<ConstantMedium>(box2, 0.01, Color(1, 1, 1)));
 
     HittableList world;
     world.add(make_shared<BVHNode>(objects, 0, 1));
@@ -87,16 +75,18 @@ int main()
     const int max_depth = 50;
 
     // World
-    HittableList world = randomScene();
+    const Color background(0, 0, 0);
+    HittableList world = cornellSmoke();
 
     // Camera
-    Point3 lookfrom(13, 2, 3);
-    Point3 lookat(0, 0, 0);
+    Point3 lookfrom(278, 278, -800);
+    Point3 lookat(278, 278, 0);
     Vec3 vup(0, 1, 0);
-    auto dist_to_focus = (lookfrom - lookat).length();
-    auto aperture = 0.05;
+    auto dist_to_focus = 10.0;
+    auto aperture = 0.0;
+    auto vfov = 40.0;
 
-    Camera cam(lookfrom, lookat, vup, 20,
+    Camera cam(lookfrom, lookat, vup, vfov,
                aspect_ratio, aperture, dist_to_focus);
 
     // Render
@@ -113,7 +103,7 @@ int main()
                 auto u = (i + randomReal()) / (image_width - 1);
                 auto v = (j + randomReal()) / (image_height - 1);
                 Ray r = cam.getRay(u, v);
-                image[j][i] += rayColor(r, world, max_depth);
+                image[j][i] += rayColor(r, background, world, max_depth);
             }
 #pragma omp critical
         std::cerr << "\rFinished lines: " << ++finished_cnt << std::flush;

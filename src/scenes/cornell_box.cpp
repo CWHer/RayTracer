@@ -1,39 +1,35 @@
 #include "../raytracer.h"
-
 #include "../hittable_list.hpp"
 #include "../sphere.hpp"
 #include "../camera.hpp"
 #include "../material.hpp"
-#include "../moving_sphere.hpp"
 #include "../texture.hpp"
 #include "../aarect.hpp"
 #include "../box.hpp"
-#include "../constant_medium.hpp"
 #include "../bvh.hpp"
 
-#include <ctime>
-
-Color ray_color(const Ray &r, const Color &background, const Hittable &world, int depth)
+Color rayColor(const Ray &r, const Color &background, const Hittable &world, int depth)
 {
-    hit_record rec;
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth < 0)
         return Color(0, 0, 0);
-    // use eps instead of 0. This gets rid of the shadow acne problem.
-    if (!world.hit(r, eps, infinity, rec))
+
+    HitRecord rec;
+    // use 0.001 instead of 0.
+    //  This gets rid of the shadow acne problem.
+    if (!world.hit(r, 0.001, INF, rec))
         return background;
 
     Ray scattered;
-    Color attenutaion;
-    Color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+    Color attenuation;
+    Color color = rec.mat_ptr->emitted(rec.u, rec.v, rec.p); // emitted
 
-    if (!rec.mat_ptr->scatter(r, rec, attenutaion, scattered))
-        return emitted;
-
-    return emitted + attenutaion * ray_color(scattered, background, world, depth - 1);
+    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        color += attenuation * rayColor(scattered, background, world, depth - 1);
+    return color;
 }
 
-HittableList cornell_box()
+HittableList cornellBox()
 {
     HittableList objects;
 
@@ -60,28 +56,25 @@ HittableList cornell_box()
     objects.add(box2);
 
     HittableList world;
-    world.add(make_shared<BVHnode>(objects, 0, 1));
+    world.add(make_shared<BVHNode>(objects, 0, 1));
 
     return world;
 }
 
 int main()
 {
-    double _t = std::clock();
-
-    // const auto aspect_ratio = 16.0 / 9.0;
+    // Image
     const auto aspect_ratio = 1.0;
-    const int image_width = 576; // 384
-    // const int image_width = 384;
+    const int image_width = 600;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 150;
+    const int samples_per_pixel = 100;
     const int max_depth = 50;
 
-    std::cout << "P3\n"
-              << image_width << ' ' << image_height << "\n255\n";
+    // World
+    const Color background(0, 0, 0);
+    HittableList world = cornellBox();
 
-    HittableList world = cornell_box();
-
+    // Camera
     Point3 lookfrom(278, 278, -800);
     Point3 lookat(278, 278, 0);
     Vec3 vup(0, 1, 0);
@@ -89,28 +82,37 @@ int main()
     auto aperture = 0.0;
     auto vfov = 40.0;
 
-    Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0, 1);
+    Camera cam(lookfrom, lookat, vup, vfov,
+               aspect_ratio, aperture, dist_to_focus);
 
-    const Color background(0, 0, 0);
+    // Render
+    std::vector<std::vector<Color>> image(
+        image_height, std::vector<Color>(image_width));
 
+    int finished_cnt = 0;
+#pragma omp parallel for num_threads(6) schedule(dynamic)
     for (int j = image_height - 1; j >= 0; --j)
     {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < image_width; ++i)
-        {
-            Color pixel_color(0, 0, 0);
-            for (int k = 0; k < samples_per_pixel; ++k)
+            for (int s = 0; s < samples_per_pixel; ++s)
             {
-                auto u = (i + random_double()) / (image_width - 1);
-                auto v = (j + random_double()) / (image_height - 1);
-                Ray r = cam.get_ray(u, v);
-
-                pixel_color += ray_color(r, background, world, max_depth);
+                auto u = (i + randomReal()) / (image_width - 1);
+                auto v = (j + randomReal()) / (image_height - 1);
+                Ray r = cam.getRay(u, v);
+                image[j][i] += rayColor(r, background, world, max_depth);
             }
-            write_color(std::cout, pixel_color, samples_per_pixel);
-        }
+#pragma omp critical
+        std::cerr << "\rFinished lines: " << ++finished_cnt << std::flush;
     }
 
+    std::cout << "P3\n"
+              << image_width << ' ' << image_height << "\n255\n";
+
+    for (int j = image_height - 1; j >= 0; --j)
+        for (int i = 0; i < image_width; ++i)
+            writeColor(std::cout, image[j][i], samples_per_pixel);
+
     std::cerr << "\nDone.\n";
-    std::cerr << (std::clock() - _t) / CLOCKS_PER_SEC;
+
+    return 0;
 }
