@@ -12,7 +12,7 @@ Reference: [_Ray Tracing The Rest of Your Life_](https://github.com/RayTracing/r
 
 #### 1. A Simple Monte Carlo Program
 
-<img src="assets/fig-3.02-jitter.jpg" alt="img" style="zoom:50%;" />
+<img src="assets/p0.jpg" alt="img" style="zoom:50%;" />
 
 > Interestingly, the stratified method is not only better, it converges with a better asymptotic rate! Unfortunately, this advantage decreases with the dimension of the problem (so for example, with the 3D sphere volume version the gap would be less). This is called the *Curse of Dimensionality*.
 
@@ -22,7 +22,7 @@ Reference: [link](https://zhuanlan.zhihu.com/p/146144853)
 
 #### 3. MC Integration on the Sphere of Directions
 
-<img src="assets/fig-3.05-solid-angle.jpg" alt="img" style="zoom:50%;" />
+<img src="assets/p1.jpg" alt="img" style="zoom:50%;" />
 
 #### 4. Light Scattering
 
@@ -88,7 +88,7 @@ Reference: [link](https://zhuanlan.zhihu.com/p/146144853)
 
 For a light of area $A$, if we sample uniformly on that light, the PDF on the surface of the light is $\frac{1}{A}$. What is it on the area of the unit sphere that defines directions? Fortunately, there is a simple correspondence, as outlined in the diagram:
 
-<img src="assets/fig-3.07-shape-onto-pdf.jpg" alt="img" style="zoom:40%;" />
+<img src="assets/p2.jpg" alt="img" style="zoom:40%;" />
 
 If we look at a small area $d A$ on the light, the probability of sampling it is $p_{q}(q) \cdot d A$. On the sphere, the probability of sampling the small area $d w$ on the sphere is $p(direction) \cdot d w$. There is a geometric relationship between $d w$ and $d A$ :
 $$
@@ -139,7 +139,7 @@ $$
 >
 >   When we sample a sphere’s solid angle uniformly from a point outside the sphere, we are really just sampling a cone uniformly (the cone is tangent to the sphere).
 
-<img src="assets/fig-3.08-sphere-enclosing-cone.jpg" alt="img" style="zoom:50%;" />
+<img src="assets/p3.jpg" alt="img" style="zoom:50%;" />
 
 We also need to evaluate the PDF of directions. For directions toward the sphere this is 1/solid_angle. What is the solid angle of the sphere? It has something to do with the $C$ above. It, by definition, is the area on the unit sphere, so the integral is
 $$
